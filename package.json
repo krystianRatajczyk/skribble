@@ -1,0 +1,14 @@
+{
+  "name": "skribble",
+  "version": "1.0.0",
+  "description": "Drawing app with guessing in real-time",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm run dev\""
+  },
+  "author": "Krystian",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
