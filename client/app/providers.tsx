@@ -1,4 +1,5 @@
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { Toaster } from "react-hot-toast";
 import React from "react";
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
@@ -9,6 +10,7 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
       enableSystem={true}
       storageKey="skribble-theme"
     >
+      <Toaster position="bottom-right" reverseOrder={false} />
       {children}
     </ThemeProvider>
   );

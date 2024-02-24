@@ -16,6 +16,11 @@ import { Input } from "../ui/input";
 import { Loader2 } from "lucide-react";
 import CopyButton from "./copy-button";
 import { Button } from "../ui/button";
+import { socket } from "@/lib/socket";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { defaultStyle } from "@/constants/toast-style";
+import { User } from "@/types/type";
 
 interface CreateRoomProps {
   roomId: string;
@@ -30,6 +35,7 @@ const formSchema = z.object({
 
 const CreateRoom = ({ roomId }: CreateRoomProps) => {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     defaultValues: { name: "" },
@@ -38,7 +44,14 @@ const CreateRoom = ({ roomId }: CreateRoomProps) => {
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
-    console.log(values);
+    socket.emit("create-room", { ...values, roomId });
+    socket.on("wrong-data", ({ message }: { message: string }) => {
+      toast.error(message, defaultStyle);
+    });
+    socket.on("created-room", () => {
+      router.push(`/${roomId}`);
+      toast.success("Created party ! 🎉", defaultStyle);
+    });
   };
 
   return (

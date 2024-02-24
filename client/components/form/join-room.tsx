@@ -22,6 +22,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Loader2 } from "lucide-react";
 import { Input } from "../ui/input";
+import { socket } from "@/lib/socket";
+import toast from "react-hot-toast";
+import { defaultStyle } from "@/constants/toast-style";
 
 const formSchema = z.object({
   username: z
@@ -43,6 +46,11 @@ const JoinRoom = () => {
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
+    socket.emit("join-room", { name: values.username, roomId: values.id });
+    socket.on("room-not-found", ({ message }) => {
+      setIsLoading(false);
+      toast.error(message, defaultStyle);
+    });
   };
   return (
     <Dialog>

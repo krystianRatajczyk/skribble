@@ -16,7 +16,8 @@ const CopyButton = ({ roomId }: CopyButtonProps) => {
     }
   }, [hasCopied]);
 
-  const copy = () => {
+  const copy = (e: React.MouseEvent) => {
+    e.preventDefault();
     navigator.clipboard.writeText(roomId);
     setHasCopied(true);
   };
