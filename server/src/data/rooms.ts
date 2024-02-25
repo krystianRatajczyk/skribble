@@ -23,3 +23,14 @@ export const getMembers = (roomId: string) => {
     return rooms[roomId];
   }
 };
+
+export const removeUser = (userId: string, roomId: string) => {
+  rooms = {
+    ...rooms,
+    [roomId]: rooms[roomId].filter((user) => user.id !== userId),
+  };
+};
+
+export const deleteRoom = (roomId: string) => {
+  delete rooms[roomId];
+};

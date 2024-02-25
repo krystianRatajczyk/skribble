@@ -4,7 +4,15 @@ import cors from "cors";
 import express from "express";
 import { joinRoomSchema } from "./lib/validate";
 import * as z from "zod";
-import { addUser, getMembers, isRoomCreated, rooms } from "./data/rooms";
+import {
+  addUser,
+  deleteRoom,
+  getMembers,
+  isRoomCreated,
+  removeUser,
+  rooms,
+} from "./data/rooms";
+import { User } from "./types/type";
 
 const app = express();
 
@@ -35,6 +43,18 @@ const joinRoom = (socket: Socket, roomId: string, name: string) => {
   const user = { id: socket.id, name };
 
   addUser(user, roomId);
+  const members = getMembers(roomId);
+
+  socket.emit("joined-room", user, members, roomId);
+  socket.to(roomId).emit("update-members", members);
+  socket
+    .to(roomId)
+    .emit("send-notification", ` ${name} has just arrived! `, "success");
+};
+
+const leaveRoom = (socket: Socket, userId: string, roomId: string) => {
+  socket.leave(roomId);
+  removeUser(userId, roomId);
 };
 
 io.on("connection", (socket) => {
@@ -49,7 +69,6 @@ io.on("connection", (socket) => {
     const { roomId, name } = validatedData;
 
     joinRoom(socket, roomId, name);
-    socket.emit("created-room");
   });
 
   socket.on("join-room", (joinRoomData: { name: string; roomId: string }) => {
@@ -69,6 +88,22 @@ io.on("connection", (socket) => {
       message:
         "Oops! The Room ID you entered doesn't exist or hasn't been created yet.",
     });
+  });
+
+  socket.on("leave-room", (user: User, roomId: string) => {
+    leaveRoom(socket, user.id, roomId);
+    socket.emit("leaved-room");
+
+    const newMembers = getMembers(roomId);
+
+    if (newMembers?.length === 0 || !newMembers) {
+      deleteRoom(roomId);
+    }
+
+    socket.to(roomId).emit("update-members", newMembers);
+    socket
+      .to(roomId)
+      .emit("send-notification", `${user.name} has left the party`, "emoji");
   });
 });
 

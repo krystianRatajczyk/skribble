@@ -25,6 +25,10 @@ import { Input } from "../ui/input";
 import { socket } from "@/lib/socket";
 import toast from "react-hot-toast";
 import { defaultStyle } from "@/constants/toast-style";
+import { User } from "@/types/type";
+import { useMembers } from "@/hooks/use-member-store";
+import { useUser } from "@/hooks/use-user-store";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   username: z
@@ -43,13 +47,25 @@ const JoinRoom = () => {
     resolver: zodResolver(formSchema),
   });
   const [isLoading, setIsLoading] = useState(false);
+  const { setMembers } = useMembers();
+  const { setUser } = useUser();
+
+  const router = useRouter();
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     socket.emit("join-room", { name: values.username, roomId: values.id });
+
     socket.on("room-not-found", ({ message }) => {
       setIsLoading(false);
       toast.error(message, defaultStyle);
+    });
+
+    socket.on("joined-room", (user: User, members: User[], roomId: string) => {
+      setMembers(members);
+      setUser(user);
+
+      router.replace(`/${roomId}`);
     });
   };
   return (

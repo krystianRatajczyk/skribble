@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Form,
   FormControl,
@@ -21,6 +21,8 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { defaultStyle } from "@/constants/toast-style";
 import { User } from "@/types/type";
+import { useMembers } from "@/hooks/use-member-store";
+import { useUser } from "@/hooks/use-user-store";
 
 interface CreateRoomProps {
   roomId: string;
@@ -35,6 +37,9 @@ const formSchema = z.object({
 
 const CreateRoom = ({ roomId }: CreateRoomProps) => {
   const [isLoading, setIsLoading] = useState(false);
+  const { setMembers } = useMembers();
+  const { setUser } = useUser();
+
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -45,12 +50,17 @@ const CreateRoom = ({ roomId }: CreateRoomProps) => {
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     socket.emit("create-room", { ...values, roomId });
+
     socket.on("wrong-data", ({ message }: { message: string }) => {
       toast.error(message, defaultStyle);
     });
-    socket.on("created-room", () => {
-      router.push(`/${roomId}`);
+
+    socket.on("joined-room", (user: User, members: User[], roomId: string) => {
+      router.replace(`/${roomId}`);
       toast.success("Created party ! 🎉", defaultStyle);
+
+      setMembers(members);
+      setUser(user);
     });
   };
 
