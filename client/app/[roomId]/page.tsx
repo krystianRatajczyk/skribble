@@ -51,16 +51,21 @@ const Room = ({ params }: RoomProps) => {
   };
 
   return (
-    <div>
-      {members?.map((member) => (
-        <div>{member.name}</div>
-      ))}
+    <div className="flex">
+      <div>
+        {members?.map((member) => (
+          <div>{member.name}</div>
+        ))}
 
-      {user && (
-        <button onClick={leaveRoom} className="px-4 py-2 bg-red-300 rounded-sm">
-          Leave
-        </button>
-      )}
+        {user && (
+          <button
+            onClick={leaveRoom}
+            className="px-4 py-2 bg-red-300 rounded-sm"
+          >
+            Leave
+          </button>
+        )}
+      </div>
     </div>
   );
 };
