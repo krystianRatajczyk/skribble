@@ -1,5 +1,7 @@
 "use client";
 
+import LeaderBoard from "@/components/leaderboard/leaderboard";
+import LeaveButton from "@/components/leaderboard/leave-button";
 import { defaultStyle } from "@/constants/toast-style";
 import { useMembers } from "@/hooks/use-member-store";
 import { useUser } from "@/hooks/use-user-store";
@@ -43,28 +45,16 @@ const Room = ({ params }: RoomProps) => {
     };
   }, [socket]);
 
-  const leaveRoom = () => {
-    socket.emit("leave-room", user, params?.roomId);
-    socket.on("leaved-room", () => {
-      router.replace("/");
-    });
-  };
-
   return (
-    <div className="flex">
-      <div>
-        {members?.map((member) => (
-          <div>{member.name}</div>
-        ))}
-
-        {user && (
-          <button
-            onClick={leaveRoom}
-            className="px-4 py-2 bg-red-300 rounded-sm"
-          >
-            Leave
-          </button>
-        )}
+    <div className="h-full flex px-3">
+      <div className="flex justify-between items-center flex-col pr-3 py-3 border-r-[1px] border-[#1e293b] ">
+        <div className="flex overflow-auto">
+          <LeaderBoard />
+        </div>
+        <LeaveButton roomId={params?.roomId} />
+      </div>
+      <div className="flex-1 bg-white h-full">
+        <div className=""></div>
       </div>
     </div>
   );
