@@ -12,7 +12,7 @@ import {
   removeUser,
   rooms,
 } from "./data/rooms";
-import { User } from "./types/type";
+import { Message, User } from "./types/type";
 
 const app = express();
 
@@ -105,6 +105,15 @@ io.on("connection", (socket) => {
       .to(roomId)
       .emit("send-notification", `${user.name} has left the party`, "emoji");
   });
+
+  socket.on(
+    "send-message",
+    ({ userMessage, roomId }: { userMessage: Message; roomId: string }) => {
+      if (userMessage.message !== "") {
+        socket.to(roomId).emit("receive-message", userMessage);
+      }
+    }
+  );
 });
 
 const PORT = process.env.PORT || 3001;

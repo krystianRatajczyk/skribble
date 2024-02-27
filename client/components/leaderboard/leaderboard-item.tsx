@@ -14,22 +14,22 @@ const LeaderboardItem = ({
     <div
       className={`min-w-[300px] flex items-center 
     justify-start px-3 py-1.5 gap-x-3 h-fit ${
-      index % 2 == 1 ? "bg-transparent" : "bg-[#101022]"
+      index % 2 == 1 ? "bg-transparent" : "dark:bg-[#101022] bg-[#f7f7f7]"
     }`}
     >
-      <p className="flex flex-start flex-row -mt-4 font-semibold ">
+      <p className="flex flex-start flex-row -mt-4 font-semibold text-[15px]">
         #{index}
       </p>
 
       <div className="flex flex-col ">
         <span
           className={`${
-            isOwner ? "text-blue-500" : "text-white"
-          } font-semibold text-lg `}
+            isOwner ? "text-blue-500" : "dark:text-white "
+          } font-semibold text-lg text-[15px]`}
         >
           {member.name} {isOwner && "(You)"}
         </span>
-        <p className="font-semibold text-sm">0 points</p>
+        <p className="font-semibold text-[13px]">0 points</p>
       </div>
     </div>
   );

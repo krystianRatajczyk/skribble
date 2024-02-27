@@ -1,14 +1,16 @@
 "use client";
 
+import Chat from "@/components/chat/chat";
+import ChatInput from "@/components/chat/chat-input";
 import LeaderBoard from "@/components/leaderboard/leaderboard";
 import LeaveButton from "@/components/leaderboard/leave-button";
 import { defaultStyle } from "@/constants/toast-style";
 import { useMembers } from "@/hooks/use-member-store";
 import { useUser } from "@/hooks/use-user-store";
 import { socket } from "@/lib/socket";
-import { User } from "@/types/type";
+import { Message, User } from "@/types/type";
 import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 interface RoomProps {
@@ -20,6 +22,7 @@ interface RoomProps {
 const Room = ({ params }: RoomProps) => {
   const { members, setMembers } = useMembers();
   const { user } = useUser();
+
   const router = useRouter();
 
   useEffect(() => {
@@ -47,14 +50,23 @@ const Room = ({ params }: RoomProps) => {
 
   return (
     <div className="h-full flex px-3">
-      <div className="flex justify-between items-center flex-col pr-3 py-3 border-r-[1px] border-[#1e293b] ">
-        <div className="flex overflow-auto">
+      <div className="flex justify-between items-center flex-col pr-3 py-3 border-r-[1px] dark:border-[#1e293b] border-[#dde9f9]">
+        <div className="flex overflow-auto ">
           <LeaderBoard />
         </div>
         <LeaveButton roomId={params?.roomId} />
       </div>
-      <div className="flex-1 bg-white h-full">
-        <div className=""></div>
+      <div className="flex-1 bg-white h-full flex flex-col">
+        <div className="flex-1"></div>
+        <div className="min-h-[100px] dark:bg-[#020817] border-[1px] dark:border-[#1e293b] border-[#dde9f9]"></div>
+      </div>
+      <div className="flex justify-between items-center flex-col w-[320px] border-l-[1px] dark:border-[#1e293b] border-[#dde9f9] pl-3 py-3 pb-5">
+        <div className="overflow-auto h-full w-full mb-5">
+          <Chat />
+        </div>
+        <div className="w-full">
+          <ChatInput />
+        </div>
       </div>
     </div>
   );

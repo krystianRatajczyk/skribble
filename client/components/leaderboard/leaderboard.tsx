@@ -10,7 +10,7 @@ const LeaderBoard = () => {
   return (
     <div className="flex flex-col items-center justify-center flex-1 overflow-scroll no-scrollbar">
       <p className="font-semibold text-xl">Leaderboard</p>
-      <div className="mt-3 border-[#1e293b] border-[1px] rounded-md overflow-hidden overflow-y-auto no-scrollbar">
+      <div className="mt-3 dark:border-[#1e293b] border-[#dde9f9] border-[1px] rounded-md overflow-hidden overflow-y-auto no-scrollbar">
         {members?.map((member, index) => (
           <LeaderboardItem
             key={member.id}
