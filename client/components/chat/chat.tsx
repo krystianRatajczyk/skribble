@@ -14,8 +14,8 @@ const Chat = () => {
         className="mt-3 dark:border-[#1e293b] border-[#dde9f9] border-[1px] rounded-md overflow-hidden overflow-y-auto no-scrollbar 
       h-full w-full dark:bg-[#050e1d]"
       >
-        {messages.map((message) => (
-          <ChatItem message={message} />
+        {messages.map((message, index) => (
+          <ChatItem message={message} key={index} />
         ))}
       </div>
     </div>

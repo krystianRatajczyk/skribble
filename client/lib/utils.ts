@@ -12,13 +12,13 @@ export const draw = ({
   currentPoint,
   strokeColor,
   strokeWidth,
-}: DrawProps & { strokeColor: string; strokeWidth: number }) => {
+}: DrawProps & { strokeColor: string; strokeWidth: number[] }) => {
   const startPoint = prevPoint ?? currentPoint;
 
-  ctx.lineWidth = strokeWidth;
+  ctx.lineWidth = strokeWidth[0];
   ctx.lineCap = "round";
   ctx.strokeStyle = strokeColor;
-  
+
   ctx.beginPath();
   ctx.moveTo(startPoint.x, startPoint.y);
   ctx.lineTo(currentPoint.x, currentPoint.y);

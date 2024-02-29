@@ -52,5 +52,15 @@ export const useDraw = (
     };
   }, [onDraw]);
 
-  return { canvasRef, onMouseDown };
+  const clear = () => {
+    const canvasElement = canvasRef.current;
+    if (!canvasElement) return;
+
+    const ctx = canvasElement.getContext("2d");
+    if (!ctx) return;
+
+    ctx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+  };
+
+  return { canvasRef, onMouseDown, clear };
 };

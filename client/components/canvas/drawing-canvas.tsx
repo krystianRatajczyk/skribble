@@ -1,21 +1,25 @@
+import { useCanvas } from "@/hooks/use-canvas-store";
 import { useDraw } from "@/hooks/use-draw";
 import { draw } from "@/lib/utils";
 import { DrawProps } from "@/types/type";
 import React, { useEffect, useRef } from "react";
+import ToolBox from "./toolbox";
 
 const DrawingCanvas = () => {
+  const { strokeColor, strokeWidth } = useCanvas();
+
   const onDraw = ({ ctx, currentPoint, prevPoint }: DrawProps) => {
     const drawOptions = {
       ctx,
       currentPoint,
       prevPoint,
-      strokeColor: "#ff0000", // replace it with canvas strore
-      strokeWidth: 30,
+      strokeColor,
+      strokeWidth,
     };
     draw(drawOptions);
   };
 
-  const { canvasRef, onMouseDown } = useDraw(onDraw);
+  const { canvasRef, onMouseDown, clear } = useDraw(onDraw);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -24,27 +28,33 @@ const DrawingCanvas = () => {
 
       const { width, height } = containerRef.current?.getBoundingClientRect();
 
-      canvasRef.current.width = width
-      canvasRef.current.height = height
+      canvasRef.current.width = width;
+      canvasRef.current.height = height;
     };
 
     setCanvasDimensions();
   }, [canvasRef]);
 
   return (
-    <div
-      className="flex h-full w-full items-center justify-center"
-      ref={containerRef}
-    >
-      <canvas
-        id="canvas"
-        ref={canvasRef}
-        onMouseDown={onMouseDown}
-        width={0}
-        height={0}
-        className="touch-none bg-white"
-      />
-    </div>
+    <>
+      <div className="flex-1">
+        <div
+          className="flex h-full w-full items-center justify-center"
+          ref={containerRef}
+        >
+          <canvas
+            id="canvas"
+            ref={canvasRef}
+            onMouseDown={onMouseDown}
+            width={0}
+            height={0}
+            className="touch-none bg-white"
+          />
+        </div>
+      </div>
+
+      <ToolBox clear={clear} />
+    </>
   );
 };
 
