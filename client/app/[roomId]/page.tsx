@@ -1,5 +1,6 @@
 "use client";
 
+import DrawingCanvas from "@/components/canvas/drawing-canvas";
 import Chat from "@/components/chat/chat";
 import ChatInput from "@/components/chat/chat-input";
 import LeaderBoard from "@/components/leaderboard/leaderboard";
@@ -57,8 +58,10 @@ const Room = ({ params }: RoomProps) => {
         <LeaveButton roomId={params?.roomId} />
       </div>
       <div className="flex-1 bg-white h-full flex flex-col">
-        <div className="flex-1"></div>
-        <div className="min-h-[100px] dark:bg-[#020817] border-[1px] dark:border-[#1e293b] border-[#dde9f9]"></div>
+        <div className="flex-1">
+          <DrawingCanvas />
+        </div>
+        <div className="min-h-[100px] dark:bg-[#020817] border-t-[1px] dark:border-[#1e293b] border-[#dde9f9]">Toolbox</div>
       </div>
       <div className="flex justify-between items-center flex-col w-[320px] border-l-[1px] dark:border-[#1e293b] border-[#dde9f9] pl-3 py-3 pb-5">
         <div className="overflow-auto h-full w-full mb-5">
