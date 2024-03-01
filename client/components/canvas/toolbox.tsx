@@ -1,3 +1,5 @@
+"use client";
+
 import { COLORS } from "@/constants/canvas";
 import React from "react";
 import StrokeSlider from "./stroke-slider";
@@ -6,13 +8,19 @@ import { useParams } from "next/navigation";
 import CopyButton from "../form/copy-button";
 import UndoButton from "./undo-button";
 import ClearButton from "./clear-button";
+import { socket } from "@/lib/socket";
 
 interface ToolBoxProps {
   clear: () => void;
 }
 
 const ToolBox = ({ clear }: ToolBoxProps) => {
-  const { roomId } = useParams();
+  const { roomId } = useParams() as { roomId: string };
+
+  const handleClear = () => {
+    socket.emit("clear-canvas", roomId);
+    clear();
+  };
 
   return (
     <div
@@ -29,7 +37,7 @@ const ToolBox = ({ clear }: ToolBoxProps) => {
           <StrokeSlider />
         </div>
         <div className="flex items-center gap-3">
-          <ClearButton clear={clear} />
+          <ClearButton clear={handleClear} />
           <UndoButton />
         </div>
       </div>
@@ -39,7 +47,7 @@ const ToolBox = ({ clear }: ToolBoxProps) => {
           <span className="dark:text-[#949b94] text-[#5b5c5b] text-sm">
             {roomId}
           </span>
-          <CopyButton roomId={"roomId"} />
+          <CopyButton roomId={roomId} />
         </div>
       </div>
     </div>

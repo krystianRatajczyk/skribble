@@ -12,7 +12,7 @@ import {
   removeUser,
   rooms,
 } from "./data/rooms";
-import { Message, User } from "./types/type";
+import { DrawOptions, Message, User } from "./types/type";
 
 const app = express();
 
@@ -114,6 +114,17 @@ io.on("connection", (socket) => {
       }
     }
   );
+
+  socket.on(
+    "draw",
+    ({ drawOptions, roomId }: { drawOptions: DrawOptions; roomId: string }) => {
+      socket.to(roomId).emit("update-canvas", drawOptions);
+    }
+  );
+
+  socket.on("clear-canvas", (roomId) => {
+    socket.to(roomId).emit("cleared-canvas");
+  });
 });
 
 const PORT = process.env.PORT || 3001;
