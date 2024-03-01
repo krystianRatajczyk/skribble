@@ -21,8 +21,21 @@ const DrawingCanvas = () => {
     };
 
     draw(drawOptions);
-
-    socket.emit("draw", { drawOptions, roomId });
+    socket.emit("draw", {
+      drawOptions: {
+        ...drawOptions,
+        prevHeightRatio:
+          drawOptions.prevPoint?.y! / canvasRef.current?.clientHeight!,
+        prevWidthRatio:
+          drawOptions.prevPoint?.x! / canvasRef.current?.clientWidth!,
+        currHeightRatio:
+          drawOptions.currentPoint?.y! / canvasRef.current?.clientHeight!,
+        currWidthRatio:
+          drawOptions.currentPoint?.x! / canvasRef.current?.clientWidth!,
+        width: canvasRef.current?.clientWidth!,
+      },
+      roomId,
+    });
   };
 
   const { canvasRef, onMouseDown, clear } = useDraw(onDraw);
@@ -43,10 +56,31 @@ const DrawingCanvas = () => {
 
   useEffect(() => {
     const ctx = canvasRef.current?.getContext("2d");
+    const width = canvasRef.current?.width;
+    const height = canvasRef.current?.height;
 
     socket.on("update-canvas", (drawOptions) => {
-      if (!ctx) return;
-      draw({ ...drawOptions, ctx });
+      if (!ctx || !canvasRef.current || !width || !height) return;
+
+      if (drawOptions.prevWidthRatio && drawOptions.prevHeightRatio) {
+        draw({
+          ...drawOptions,
+          ctx,
+          currentPoint: {
+            x: drawOptions.currWidthRatio * width,
+            y: drawOptions.currHeightRatio * height,
+          },
+
+          prevPoint: {
+            x: drawOptions.prevWidthRatio * width,
+            y: drawOptions.prevHeightRatio * height,
+          },
+          strokeWidth: [
+            drawOptions.strokeWidth *
+              (canvasRef.current?.clientWidth / drawOptions.width),
+          ],
+        });
+      }
     });
 
     socket.on("cleared-canvas", () => {
@@ -57,7 +91,7 @@ const DrawingCanvas = () => {
       socket.off("update-canvas");
       socket.off("cleared-canvas");
     };
-  }, [socket, draw]);
+  }, [socket, draw, canvasRef]);
 
   return (
     <>
