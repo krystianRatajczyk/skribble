@@ -6,10 +6,14 @@ import React, { useEffect, useRef } from "react";
 import ToolBox from "./toolbox";
 import { socket } from "@/lib/socket";
 import { useParams } from "next/navigation";
+import { useUser } from "@/hooks/use-user-store";
+import { useGame } from "@/hooks/use-game-store";
 
 const DrawingCanvas = () => {
   const { strokeColor, strokeWidth } = useCanvas();
   const { roomId } = useParams();
+  const { user } = useUser();
+  const { currentDrawer } = useGame();
 
   const onDraw = ({ ctx, currentPoint, prevPoint }: DrawProps) => {
     const drawOptions = {
@@ -19,6 +23,9 @@ const DrawingCanvas = () => {
       strokeColor,
       strokeWidth,
     };
+    if (currentDrawer?.id !== user?.id) {
+      return;
+    }
 
     draw(drawOptions);
     socket.emit("draw", {
@@ -111,7 +118,14 @@ const DrawingCanvas = () => {
         </div>
       </div>
 
-      <ToolBox clear={clear} />
+      {currentDrawer?.id === user?.id ? (
+        <ToolBox clear={clear} />
+      ) : (
+        <div
+          className="min-h-[15vh] dark:bg-[#020817] border-t-[1px] 
+    dark:border-[#1e293b] border-[#dde9f9] "
+        />
+      )}
     </>
   );
 };

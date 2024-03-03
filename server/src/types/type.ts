@@ -3,6 +3,11 @@ export interface User {
   name: string;
 }
 
+export interface Room {
+  users: User[];
+  currentIndexOfDrawer: number;
+}
+
 export interface Message {
   author: User;
   message: string;

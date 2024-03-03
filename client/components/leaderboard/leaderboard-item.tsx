@@ -12,7 +12,7 @@ const LeaderboardItem = ({
 }) => {
   return (
     <div
-      className={`min-w-[300px] flex items-center 
+      className={`w-[300px] flex items-center 
     justify-start px-3 py-1.5 gap-x-3 h-fit ${
       index % 2 == 1 ? "bg-transparent" : "dark:bg-[#101022] bg-[#f7f7f7]"
     }`}

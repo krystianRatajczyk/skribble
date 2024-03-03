@@ -29,16 +29,14 @@ import { User } from "@/types/type";
 import { useMembers } from "@/hooks/use-member-store";
 import { useUser } from "@/hooks/use-user-store";
 import { useRouter } from "next/navigation";
+import { useGame } from "@/hooks/use-game-store";
 
 const formSchema = z.object({
   username: z
     .string()
     .min(2, "Username must contain at least 2 characters")
-    .max(30, "Username must not contain more than 30 characters"),
-  id: z
-    .string()
-    .min(21, "Id must contain exactly 21 characters")
-    .max(21, "Id must contain exactly 21 characters"),
+    .max(19, "Username must not contain more than 19 characters"),
+  id: z.string().length(21, "Id must contain exactly 21 characters"),
 });
 
 const JoinRoom = () => {
@@ -49,6 +47,7 @@ const JoinRoom = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { setMembers } = useMembers();
   const { setUser } = useUser();
+  const { setCurrentDrawer } = useGame();
 
   const router = useRouter();
 
@@ -61,12 +60,16 @@ const JoinRoom = () => {
       toast.error(message, defaultStyle);
     });
 
-    socket.on("joined-room", (user: User, members: User[], roomId: string) => {
-      setMembers(members);
-      setUser(user);
-
-      router.replace(`/${roomId}`);
-    });
+    socket.on(
+      "joined-room",
+      (user: User, members: User[], roomId: string, currentDrawer: User) => {
+        setMembers(members);
+        setUser(user);
+        setCurrentDrawer(currentDrawer);
+        
+        router.replace(`/${roomId}`);
+      }
+    );
   };
   return (
     <Dialog>

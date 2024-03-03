@@ -7,6 +7,7 @@ import * as z from "zod";
 import {
   addUser,
   deleteRoom,
+  getCurrentDrawer,
   getMembers,
   isRoomCreated,
   removeUser,
@@ -39,13 +40,13 @@ const validateData = (
 
 const joinRoom = (socket: Socket, roomId: string, name: string) => {
   socket.join(roomId);
-
   const user = { id: socket.id, name };
 
   addUser(user, roomId);
   const members = getMembers(roomId);
+  const currentDrawer = getCurrentDrawer(roomId);
 
-  socket.emit("joined-room", user, members, roomId);
+  socket.emit("joined-room", user, members, roomId, currentDrawer);
   socket.to(roomId).emit("update-members", members);
   socket
     .to(roomId)

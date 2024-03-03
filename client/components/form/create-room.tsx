@@ -23,6 +23,7 @@ import { defaultStyle } from "@/constants/toast-style";
 import { User } from "@/types/type";
 import { useMembers } from "@/hooks/use-member-store";
 import { useUser } from "@/hooks/use-user-store";
+import { useGame } from "@/hooks/use-game-store";
 
 interface CreateRoomProps {
   roomId: string;
@@ -39,6 +40,7 @@ const CreateRoom = ({ roomId }: CreateRoomProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const { setMembers } = useMembers();
   const { setUser } = useUser();
+  const { setCurrentDrawer } = useGame();
 
   const router = useRouter();
 
@@ -55,13 +57,18 @@ const CreateRoom = ({ roomId }: CreateRoomProps) => {
       toast.error(message, defaultStyle);
     });
 
-    socket.on("joined-room", (user: User, members: User[], roomId: string) => {
-      router.replace(`/${roomId}`);
-      toast.success("Created party ! 🎉", defaultStyle);
+    socket.on(
+      "joined-room",
+      (user: User, members: User[], roomId: string, currentDrawer: User) => {
+        toast.success("Created party ! 🎉", defaultStyle);
 
-      setMembers(members);
-      setUser(user);
-    });
+        setMembers(members);
+        setUser(user);
+        setCurrentDrawer(currentDrawer);
+
+        router.replace(`/${roomId}`);
+      }
+    );
   };
 
   return (

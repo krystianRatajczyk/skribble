@@ -1,12 +1,12 @@
-import { User } from "../types/type";
+import { Room, User } from "../types/type";
 
-export let rooms: Record<string, User[]> = {};
+export let rooms: Record<string, Room> = {};
 
 export const addUser = (user: User, roomId: string) => {
   if (!(roomId in rooms)) {
-    rooms[roomId] = [user];
+    rooms[roomId] = { users: [user], currentIndexOfDrawer: 0 };
   } else {
-    rooms[roomId].push(user);
+    rooms[roomId].users.push(user);
   }
 };
 
@@ -20,14 +20,23 @@ export const isRoomCreated = (roomId: string): boolean => {
 
 export const getMembers = (roomId: string) => {
   if (roomId in rooms) {
-    return rooms[roomId];
+    return rooms[roomId].users;
+  }
+};
+
+export const getCurrentDrawer = (roomId: string) => {
+  if (roomId in rooms) {
+    return rooms[roomId].users[rooms[roomId].currentIndexOfDrawer];
   }
 };
 
 export const removeUser = (userId: string, roomId: string) => {
   rooms = {
     ...rooms,
-    [roomId]: rooms[roomId].filter((user) => user.id !== userId),
+    [roomId]: {
+      ...rooms[roomId],
+      users: rooms[roomId].users.filter((user) => user.id !== userId),
+    },
   };
 };
 
