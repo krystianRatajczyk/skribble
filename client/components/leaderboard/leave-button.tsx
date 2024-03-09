@@ -24,13 +24,13 @@ const LeaveButton = ({ roomId }: LeaveRoomProps) => {
   };
 
   return (
-    <Button
-      variant="ghost"
-      onClick={leaveRoom}
-      className="w-full bg-red-600 mt-3 dark:hover:bg-[#1e293b] hover:bg-[#c5c5c5]"
-    >
-      {isLeaving ? <Loader2 className="h-4 w-4 animate-spin" /> : "Leave"}
-    </Button>
+      <Button
+        variant="ghost"
+        onClick={leaveRoom}
+        className="w-full bg-red-600 mt-3 dark:hover:bg-[#1e293b] hover:bg-[#c5c5c5]"
+      >
+        {isLeaving ? <Loader2 className="h-4 w-4 animate-spin" /> : "Leave"}
+      </Button>
   );
 };
 

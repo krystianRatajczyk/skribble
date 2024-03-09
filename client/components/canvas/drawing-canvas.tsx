@@ -118,7 +118,7 @@ const DrawingCanvas = () => {
     <>
       <div className="flex-1">
         <div
-          className="flex h-full w-full items-center justify-center"
+          className="flex h-full w-full items-center justify-center "
           ref={containerRef}
         >
           {!hasGameStarted ? (
@@ -139,7 +139,7 @@ const DrawingCanvas = () => {
               onMouseDown={onMouseDown}
               width={0}
               height={0}
-              className="touch-none bg-white"
+              className="touch-none bg-white "
             />
           )}
         </div>
