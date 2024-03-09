@@ -28,12 +28,11 @@ export const useDraw = (
 
     const handleMove = (e: MouseEvent) => {
       if (!mouseDown) return;
-
+      
       const currentPoint = computePointsInCanvas(e);
-
+      
       const ctx = canvasRef.current?.getContext("2d");
       if (!ctx || !currentPoint) return;
-
       onDraw({ ctx, currentPoint, prevPoint: prevPoint.current });
       prevPoint.current = currentPoint;
     };

@@ -20,7 +20,7 @@ const formSchema = z.object({
 const ChatInput = () => {
   const { user } = useUser();
   const { setMessages } = useChat();
-  const params = useParams();
+  const { roomId } = useParams();
 
   const form = useForm<z.infer<typeof formSchema>>({
     defaultValues: { message: "" },
@@ -30,13 +30,13 @@ const ChatInput = () => {
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const userMessage = {
       message: values.message,
-      author: { id: user?.id!, name: user?.name! },
+      author: { id: user?.id!, name: user?.name!, isAdmin: user?.isAdmin! },
     };
 
     if (user) {
       setMessages(userMessage);
 
-      socket.emit("send-message", { userMessage, roomId: params?.roomId });
+      socket.emit("send-message", { userMessage, roomId });
     }
 
     form.reset();
@@ -50,7 +50,7 @@ const ChatInput = () => {
     return () => {
       socket.off("receive-message");
     };
-  }, []);
+  }, [socket]);
 
   return (
     <Form {...form}>
@@ -72,7 +72,7 @@ const ChatInput = () => {
                     {...field}
                   />
                   <SendHorizontal
-                  className="dark:text-[#1e293b] text-[#9b9b9b]"
+                    className="dark:text-[#1e293b] text-[#9b9b9b]"
                     onClick={form.handleSubmit(onSubmit)}
                   />
                 </div>

@@ -11,7 +11,6 @@ import {
   getMembers,
   isRoomCreated,
   removeUser,
-  rooms,
 } from "./data/rooms";
 import { DrawOptions, Message, User } from "./types/type";
 
@@ -123,8 +122,12 @@ io.on("connection", (socket) => {
     }
   );
 
-  socket.on("clear-canvas", (roomId) => {
+  socket.on("clear-canvas", (roomId: string) => {
     socket.to(roomId).emit("cleared-canvas");
+  });
+
+  socket.on("start-game", ({ rounds, drawtime, roomId, currentDrawer }) => {
+    socket.to(roomId).emit("started-game", rounds, drawtime, currentDrawer);
   });
 });
 

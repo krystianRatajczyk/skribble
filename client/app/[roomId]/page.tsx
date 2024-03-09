@@ -1,7 +1,6 @@
 "use client";
 
 import DrawingCanvas from "@/components/canvas/drawing-canvas";
-import ToolBox from "@/components/canvas/toolbox";
 import Chat from "@/components/chat/chat";
 import ChatInput from "@/components/chat/chat-input";
 import LeaderBoard from "@/components/leaderboard/leaderboard";
@@ -10,9 +9,9 @@ import { defaultStyle } from "@/constants/toast-style";
 import { useMembers } from "@/hooks/use-member-store";
 import { useUser } from "@/hooks/use-user-store";
 import { socket } from "@/lib/socket";
-import { Message, User } from "@/types/type";
+import { User } from "@/types/type";
 import { useRouter } from "next/navigation";
-import React, { RefObject, useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import toast from "react-hot-toast";
 
 interface RoomProps {

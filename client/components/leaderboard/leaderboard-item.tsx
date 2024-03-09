@@ -1,19 +1,24 @@
 import { User } from "@/types/type";
+import { Pencil } from "lucide-react";
 import React from "react";
+
+interface LeaderboardItemProps {
+  member: User;
+  index: number;
+  isOwner: boolean;
+  isDrawer: boolean;
+}
 
 const LeaderboardItem = ({
   member,
   index,
   isOwner,
-}: {
-  member: User;
-  index: number;
-  isOwner: boolean;
-}) => {
+  isDrawer,
+}: LeaderboardItemProps) => {
   return (
     <div
       className={`w-[300px] flex items-center 
-    justify-start px-3 py-1.5 gap-x-3 h-fit ${
+    justify-start px-3 py-1.5 gap-x-3 h-fit relative ${
       index % 2 == 1 ? "bg-transparent" : "dark:bg-[#101022] bg-[#f7f7f7]"
     }`}
     >
@@ -30,6 +35,9 @@ const LeaderboardItem = ({
           {member.name} {isOwner && "(You)"}
         </span>
         <p className="font-semibold text-[13px]">0 points</p>
+      </div>
+      <div className="absolute top-3.5 right-5">
+        {isDrawer && <Pencil className="w-5 h-5" />}
       </div>
     </div>
   );

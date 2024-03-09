@@ -63,7 +63,7 @@ const CreateRoom = ({ roomId }: CreateRoomProps) => {
         toast.success("Created party ! 🎉", defaultStyle);
 
         setMembers(members);
-        setUser(user);
+        setUser({...user, isAdmin: true});
         setCurrentDrawer(currentDrawer);
 
         router.replace(`/${roomId}`);
