@@ -9,6 +9,8 @@ import { useParams } from "next/navigation";
 import { useUser } from "@/hooks/use-user-store";
 import { useGame } from "@/hooks/use-game-store";
 import GameSettings from "./game-settings";
+import ChoosePassword from "./choose-password";
+import Notification from "../layout/notification";
 
 const DrawingCanvas = () => {
   const { strokeColor, strokeWidth } = useCanvas();
@@ -21,6 +23,7 @@ const DrawingCanvas = () => {
     setDrawtime,
     setGameState,
     setCurrentDrawer,
+    password,
   } = useGame();
 
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -66,7 +69,7 @@ const DrawingCanvas = () => {
     };
 
     setCanvasDimensions();
-  }, [canvasRef, hasGameStarted]);
+  }, [canvasRef, hasGameStarted, password]);
 
   useEffect(() => {
     const ctx = canvasRef.current?.getContext("2d");
@@ -112,7 +115,40 @@ const DrawingCanvas = () => {
       socket.off("cleared-canvas");
       socket.off("started-game");
     };
-  }, [socket, draw, canvasRef, hasGameStarted]);
+  }, [socket, draw, canvasRef, hasGameStarted, password]);
+
+  const renderContent = () => {
+    if (!hasGameStarted) {
+      if (!user?.isAdmin) {
+        return <Notification notification="Waiting for host to start game" />;
+      }
+
+      return <GameSettings />;
+    }
+
+    if (!password) {
+      if (user?.id === currentDrawer?.id) {
+        return <ChoosePassword />;
+      }
+
+      return (
+        <Notification
+          notification={`${currentDrawer?.name} is choosing the word`}
+        />
+      );
+    }
+
+    return (
+      <canvas
+        id="canvas"
+        ref={canvasRef}
+        onMouseDown={onMouseDown}
+        width={0}
+        height={0}
+        className="touch-none bg-white "
+      />
+    );
+  };
 
   return (
     <>
@@ -121,27 +157,7 @@ const DrawingCanvas = () => {
           className="flex h-full w-full items-center justify-center "
           ref={containerRef}
         >
-          {!hasGameStarted ? (
-            user?.isAdmin ? (
-              <GameSettings />
-            ) : (
-              <div
-                className="w-full h-full flex items-center justify-center bg-[#4e4e4e59] 
-              text-black text-[20px] font-semibold"
-              >
-                Waiting for host to start game
-              </div>
-            )
-          ) : (
-            <canvas
-              id="canvas"
-              ref={canvasRef}
-              onMouseDown={onMouseDown}
-              width={0}
-              height={0}
-              className="touch-none bg-white "
-            />
-          )}
+          {renderContent()}
         </div>
       </div>
 

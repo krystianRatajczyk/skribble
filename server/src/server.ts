@@ -129,6 +129,10 @@ io.on("connection", (socket) => {
   socket.on("start-game", ({ rounds, drawtime, roomId, currentDrawer }) => {
     socket.to(roomId).emit("started-game", rounds, drawtime, currentDrawer);
   });
+
+  socket.on("change-password", (password, roomId) => {
+    socket.to(roomId).emit("changed-password", password);
+  });
 });
 
 const PORT = process.env.PORT || 3001;

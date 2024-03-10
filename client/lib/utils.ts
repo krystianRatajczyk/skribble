@@ -1,3 +1,4 @@
+import { PASSWORDS } from "@/constants/passwords";
 import { DrawProps } from "@/types/type";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -23,4 +24,12 @@ export const draw = ({
   ctx.moveTo(startPoint.x, startPoint.y);
   ctx.lineTo(currentPoint.x, currentPoint.y);
   ctx.stroke();
+};
+
+export const getPasswords = (amount: number): string[] => {
+  const copy = [...PASSWORDS];
+
+  copy.sort(() => Math.random() - 0.5);
+
+  return copy.slice(0, amount);
 };

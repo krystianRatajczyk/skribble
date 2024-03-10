@@ -56,8 +56,7 @@ const GameSettings = () => {
     setRounds,
     setDrawtime,
     setGameState,
-    setCurrentDrawer,
-    currentDrawer,
+    setRoundState,
   } = useGame();
 
   const form = useForm({
@@ -73,6 +72,7 @@ const GameSettings = () => {
     setGameState(true);
     setRounds(+values.rounds);
     setDrawtime(+values.drawtime);
+    setRoundState(true);
 
     socket.emit("start-game", { ...values, roomId, currentDrawer: user });
   };

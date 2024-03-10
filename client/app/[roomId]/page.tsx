@@ -8,6 +8,7 @@ import LeaderBoard from "@/components/leaderboard/leaderboard";
 import LeaveButton from "@/components/leaderboard/leave-button";
 import ThemeToggle from "@/components/theme-toggle";
 import { defaultStyle } from "@/constants/toast-style";
+import { useGame } from "@/hooks/use-game-store";
 import { useMembers } from "@/hooks/use-member-store";
 import { useUser } from "@/hooks/use-user-store";
 import { socket } from "@/lib/socket";
@@ -24,6 +25,7 @@ interface RoomProps {
 
 const Room = ({ params }: RoomProps) => {
   const { members, setMembers } = useMembers();
+  const { setPassword } = useGame();
   const { user } = useUser();
   const router = useRouter();
 
@@ -44,9 +46,14 @@ const Room = ({ params }: RoomProps) => {
         toast(message, { icon: "😔", ...defaultStyle });
     });
 
+    socket.on("changed-password", (password) => {
+      setPassword(password);
+    });
+
     return () => {
       socket.off("update-members");
       socket.off("send-notification");
+      socket.off("changed-password");
     };
   }, [socket]);
 
