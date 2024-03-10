@@ -4,7 +4,11 @@ export let rooms: Record<string, Room> = {};
 
 export const addUser = (user: User, roomId: string) => {
   if (!(roomId in rooms)) {
-    rooms[roomId] = { users: [user], currentIndexOfDrawer: 0 };
+    rooms[roomId] = {
+      users: [user],
+      currentIndexOfDrawer: 0,
+      currentPassword: "",
+    };
   } else {
     rooms[roomId].users.push(user);
   }
@@ -42,4 +46,16 @@ export const removeUser = (userId: string, roomId: string) => {
 
 export const deleteRoom = (roomId: string) => {
   delete rooms[roomId];
+};
+
+export const setPassword = (roomId: string, password: string) => {
+  if (roomId in rooms) {
+    rooms[roomId].currentPassword = password;
+  }
+};
+
+export const getPassword = (roomId: string) => {
+  if (roomId in rooms && rooms[roomId].currentPassword !== "") {
+    return rooms[roomId].currentPassword;
+  }
 };

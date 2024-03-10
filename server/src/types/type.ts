@@ -6,11 +6,13 @@ export interface User {
 export interface Room {
   users: User[];
   currentIndexOfDrawer: number;
+  currentPassword: string;
 }
 
 export interface Message {
   author: User;
   message: string;
+  isGuessed: boolean;
 }
 
 export interface Point {

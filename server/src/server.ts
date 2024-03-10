@@ -9,8 +9,10 @@ import {
   deleteRoom,
   getCurrentDrawer,
   getMembers,
+  getPassword,
   isRoomCreated,
   removeUser,
+  setPassword,
 } from "./data/rooms";
 import { DrawOptions, Message, User } from "./types/type";
 
@@ -110,7 +112,12 @@ io.on("connection", (socket) => {
     "send-message",
     ({ userMessage, roomId }: { userMessage: Message; roomId: string }) => {
       if (userMessage.message !== "") {
-        socket.to(roomId).emit("receive-message", userMessage);
+        socket.to(roomId).emit("receive-message", {
+          ...userMessage,
+          isGuessed:
+            userMessage.isGuessed &&
+            getPassword(roomId)?.toLocaleLowerCase() === userMessage.message,
+        });
       }
     }
   );
@@ -131,6 +138,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("change-password", (password, roomId) => {
+    setPassword(roomId, password);
     socket.to(roomId).emit("changed-password", password);
   });
 });

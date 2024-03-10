@@ -12,6 +12,7 @@ import { useParams } from "next/navigation";
 import { Message } from "@/types/type";
 import { useUser } from "@/hooks/use-user-store";
 import { useChat } from "@/hooks/use-chat-store";
+import { useGame } from "@/hooks/use-game-store";
 
 const formSchema = z.object({
   message: z.string().min(1),
@@ -20,6 +21,7 @@ const formSchema = z.object({
 const ChatInput = () => {
   const { user } = useUser();
   const { setMessages } = useChat();
+  const { password, currentDrawer } = useGame();
   const { roomId } = useParams();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -31,12 +33,17 @@ const ChatInput = () => {
     const userMessage = {
       message: values.message,
       author: { id: user?.id!, name: user?.name!, isAdmin: user?.isAdmin! },
+      isGuessed:
+        password?.toLocaleLowerCase() === values.message.toLocaleLowerCase() && user?.id !== currentDrawer?.id,
+      ownMessage: user?.id === currentDrawer?.id && password !== null,
     };
 
     if (user) {
       setMessages(userMessage);
 
-      socket.emit("send-message", { userMessage, roomId });
+      if (!userMessage.ownMessage) {
+        socket.emit("send-message", { userMessage, roomId });
+      }
     }
 
     form.reset();

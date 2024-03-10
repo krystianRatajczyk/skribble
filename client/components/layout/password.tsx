@@ -12,7 +12,7 @@ const Password = () => {
 
   return (
     <div className="font-semibold text-xl flex items-center flex-col justify-between h-full py-4">
-      <span className="font-normal text-xs ">
+      <span className="font-normal text-xs">
         {currentDrawer?.id === user?.id ? "Draw this" : "Guess this"}
       </span>
       {currentDrawer?.id === user?.id ? (

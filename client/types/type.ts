@@ -7,6 +7,8 @@ export interface User {
 export interface Message {
   author: User;
   message: string;
+  isGuessed: boolean;
+  ownMessage: boolean;
 }
 
 // Drawing
