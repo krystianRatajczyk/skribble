@@ -8,12 +8,14 @@ interface GameState {
   hasGameStarted: boolean;
   hasRoundStarted: boolean;
   password: string | null;
+  winners: User[];
   setRounds: (rounds: number) => void;
   setDrawtime: (time: number) => void;
   setCurrentDrawer: (currentDrawer: User) => void;
   setGameState: (state: boolean) => void;
   setRoundState: (state: boolean) => void;
   setPassword: (password: string) => void;
+  setWinners: (user: User) => void;
 }
 
 export const useGame = create<GameState>((set) => ({
@@ -23,10 +25,15 @@ export const useGame = create<GameState>((set) => ({
   hasGameStarted: false,
   hasRoundStarted: false,
   password: null,
+  winners: [],
   setCurrentDrawer: (currentDrawer) => set({ currentDrawer }),
   setRounds: (rounds) => set({ rounds }),
   setDrawtime: (drawtime) => set({ drawtime }),
   setGameState: (state) => set({ hasGameStarted: state }),
   setRoundState: (state) => set({ hasRoundStarted: state }),
   setPassword: (password) => set({ password }),
+  setWinners: (winner) =>
+    set((prev) => ({
+      winners: [...prev.winners, winner],
+    })),
 }));

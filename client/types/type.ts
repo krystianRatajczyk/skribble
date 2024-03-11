@@ -9,6 +9,7 @@ export interface Message {
   message: string;
   isGuessed: boolean;
   ownMessage: boolean;
+  isWinner: boolean;
 }
 
 // Drawing

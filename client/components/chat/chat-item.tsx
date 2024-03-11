@@ -6,7 +6,6 @@ interface ChatItemProps {
 }
 
 const ChatItem = ({ message }: ChatItemProps) => {
-
   if (message.isGuessed) {
     return (
       <div className="px-3 py-1">
@@ -19,8 +18,28 @@ const ChatItem = ({ message }: ChatItemProps) => {
 
   return (
     <div className="px-3 py-1">
-      <span className={`text-sm font-bold ${message.ownMessage && "text-[#7dad45]"}`}>{message.author.name}: </span>
-      <span className={`text-md font-normal ${message.ownMessage && "text-[#7dad45]"}`}>{message.message}</span>
+      <span
+        className={`text-sm font-bold ${
+          message.ownMessage
+            ? "text-[#7dad45]"
+            : message.isWinner
+            ? "text-blue-300"
+            : ""
+        }`}
+      >
+        {message.author.name}:{" "}
+      </span>
+      <span
+        className={`text-md font-normal ${
+          message.ownMessage
+            ? "text-[#7dad45]"
+            : message.isWinner
+            ? "text-blue-300"
+            : ""
+        }`}
+      >
+        {message.message}
+      </span>
     </div>
   );
 };

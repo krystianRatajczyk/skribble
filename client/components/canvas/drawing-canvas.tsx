@@ -37,7 +37,7 @@ const DrawingCanvas = () => {
     };
 
     if (currentDrawer?.id !== user?.id) return;
-
+    
     draw(drawOptions);
     socket.emit("draw", {
       drawOptions: {

@@ -9,7 +9,7 @@ import { Input } from "../ui/input";
 import { SendHorizontal } from "lucide-react";
 import { socket } from "@/lib/socket";
 import { useParams } from "next/navigation";
-import { Message } from "@/types/type";
+import { Message, User } from "@/types/type";
 import { useUser } from "@/hooks/use-user-store";
 import { useChat } from "@/hooks/use-chat-store";
 import { useGame } from "@/hooks/use-game-store";
@@ -21,7 +21,7 @@ const formSchema = z.object({
 const ChatInput = () => {
   const { user } = useUser();
   const { setMessages } = useChat();
-  const { password, currentDrawer } = useGame();
+  const { password, currentDrawer, setWinners, winners } = useGame();
   const { roomId } = useParams();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -34,15 +34,26 @@ const ChatInput = () => {
       message: values.message,
       author: { id: user?.id!, name: user?.name!, isAdmin: user?.isAdmin! },
       isGuessed:
-        password?.toLocaleLowerCase() === values.message.toLocaleLowerCase() && user?.id !== currentDrawer?.id,
+        password?.toLocaleLowerCase() === values.message.toLocaleLowerCase() &&
+        user?.id !== currentDrawer?.id,
       ownMessage: user?.id === currentDrawer?.id && password !== null,
     };
 
     if (user) {
-      setMessages(userMessage);
+      const isWinner = !!winners.find((winner) => winner.id === user?.id);
+      setMessages({ ...userMessage, isWinner });
 
-      if (!userMessage.ownMessage) {
+      if (userMessage.isGuessed) {
+        setWinners(user);
+      }
+
+      if (!userMessage.ownMessage && !isWinner) {
         socket.emit("send-message", { userMessage, roomId });
+      } else if (isWinner) {
+        socket.emit("send-message-winners", {
+          userMessage,
+          ids: winners.map((winner) => winner.id !== user?.id && winner.id),
+        });
       }
     }
 
@@ -54,8 +65,18 @@ const ChatInput = () => {
       setMessages(message);
     });
 
+    socket.on("guessed-password", (author: User) => {
+      setWinners(author);
+    });
+
+    socket.on("sent-message-winners", (message: Message) => {
+      setMessages(message);
+    });
+
     return () => {
       socket.off("receive-message");
+      socket.off("guessed-password");
+      socket.off("sent-message-winners");
     };
   }, [socket]);
 

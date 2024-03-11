@@ -1,21 +1,23 @@
 import { useGame } from "@/hooks/use-game-store";
 import { useUser } from "@/hooks/use-user-store";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const Password = () => {
-  const { password, currentDrawer } = useGame();
+  const { password, currentDrawer, winners } = useGame();
   const { user } = useUser();
 
   if (!password) {
     return null;
   }
 
+  const isWinner = !!winners.find((winner) => winner.id === user?.id);
+
   return (
     <div className="font-semibold text-xl flex items-center flex-col justify-between h-full py-4">
       <span className="font-normal text-xs">
-        {currentDrawer?.id === user?.id ? "Draw this" : "Guess this"}
+        {currentDrawer?.id === user?.id ? "Draw this" : isWinner ? "The word was" : "Guess this"}
       </span>
-      {currentDrawer?.id === user?.id ? (
+      {currentDrawer?.id === user?.id || isWinner ? (
         <div>{password}</div>
       ) : (
         <div className="relative ">

@@ -118,6 +118,9 @@ io.on("connection", (socket) => {
             userMessage.isGuessed &&
             getPassword(roomId)?.toLocaleLowerCase() === userMessage.message,
         });
+        if (getPassword(roomId)?.toLocaleLowerCase() === userMessage.message) {
+          socket.to(roomId).emit("guessed-password", userMessage.author);
+        }
       }
     }
   );
@@ -141,6 +144,17 @@ io.on("connection", (socket) => {
     setPassword(roomId, password);
     socket.to(roomId).emit("changed-password", password);
   });
+
+  socket.on(
+    "send-message-winners",
+    ({ userMessage, ids }: { userMessage: Message; ids: string[] }) => {
+      ids.forEach((id) => {
+        socket
+          .to(id)
+          .emit("sent-message-winners", { ...userMessage, isWinner: true });
+      });
+    }
+  );
 });
 
 const PORT = process.env.PORT || 3001;
