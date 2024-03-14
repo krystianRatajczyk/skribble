@@ -34,7 +34,7 @@ const LeaderboardItem = ({
         >
           {member.name} {isOwner && "(You)"}
         </span>
-        <p className="font-semibold text-[13px]">0 points</p>
+        <p className="font-semibold text-[13px]">{member.points} points</p>
       </div>
       <div className="absolute top-3.5 right-5">
         {isDrawer && <Pencil className="w-5 h-5" />}

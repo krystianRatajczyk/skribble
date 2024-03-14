@@ -1,36 +1,82 @@
 "use client";
 
 import { useGame } from "@/hooks/use-game-store";
+import { useMembers } from "@/hooks/use-member-store";
+import { socket } from "@/lib/socket";
+import { User } from "@/types/type";
+import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 const Timer = () => {
-  const { drawtime, password } = useGame();
-  const [time, setTime] = useState(drawtime);
+  const { roomId } = useParams();
+  const {
+    currentDrawer,
+    setRoundState,
+    drawtime,
+    password,
+    winners,
+    time,
+    setTime,
+  } = useGame();
+  const { members, setMembers } = useMembers();
+  const [count, setCount] = useState(false);
+
+  const roundOver = () => {
+    setCount(false);
+    setRoundState(false);
+    socket.emit(
+      "get-points",
+      roomId,
+      currentDrawer,
+      winners.length,
+      members.length - 1
+    );
+  };
 
   useEffect(() => {
     setTime(drawtime);
   }, [drawtime]);
 
   useEffect(() => {
-    if (password && drawtime) {
-      const interval = setInterval(() => {
-        setTime((prev) => {
-          if (prev) return prev - 1;
-          else return prev;
-        });
-      }, 1000);
-
-      return () => clearInterval(interval);
-    } else {
-      setTime(drawtime);
-    }
+    setCount(password !== null);
   }, [password]);
 
   useEffect(() => {
+    if (count && drawtime) {
+      const interval = setInterval(() => {
+        setTime((prev) => (typeof prev === "number" ? prev - 1 : null));
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [count, drawtime]);
+
+  useEffect(() => {
     if (time === 0) {
-      //game over
+      roundOver();
     }
   }, [time]);
+
+  useEffect(() => {
+    //everyone guessed tne word
+    if (
+      members.length > 0 &&
+      winners.length > 0 &&
+      winners.length === members.length - 1
+    ) {
+      roundOver();
+    }
+  }, [winners]);
+
+  useEffect(() => {
+    socket.on("got-points", (members: User[]) => {
+      setMembers(members);
+    });
+
+    return () => {
+      socket.off("got-points");
+    };
+  }, [socket]);
 
   if (!drawtime) {
     return null;

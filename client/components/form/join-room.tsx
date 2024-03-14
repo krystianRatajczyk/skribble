@@ -64,9 +64,9 @@ const JoinRoom = () => {
       "joined-room",
       (user: User, members: User[], roomId: string, currentDrawer: User) => {
         setMembers(members);
-        setUser({...user, isAdmin: false});
+        setUser({ ...user, isAdmin: false, points: 0 });
         setCurrentDrawer(currentDrawer);
-        
+
         router.replace(`/${roomId}`);
       }
     );

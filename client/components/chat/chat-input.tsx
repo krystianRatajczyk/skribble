@@ -21,7 +21,8 @@ const formSchema = z.object({
 const ChatInput = () => {
   const { user } = useUser();
   const { setMessages } = useChat();
-  const { password, currentDrawer, setWinners, winners } = useGame();
+  const { password, currentDrawer, setWinners, winners, time, drawtime } =
+    useGame();
   const { roomId } = useParams();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -32,7 +33,7 @@ const ChatInput = () => {
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const userMessage = {
       message: values.message,
-      author: { id: user?.id!, name: user?.name!, isAdmin: user?.isAdmin! },
+      author: { ...user! },
       isGuessed:
         password?.toLocaleLowerCase() === values.message.toLocaleLowerCase() &&
         user?.id !== currentDrawer?.id,
@@ -41,17 +42,30 @@ const ChatInput = () => {
 
     if (user) {
       const isWinner = !!winners.find((winner) => winner.id === user?.id);
-      setMessages({ ...userMessage, isWinner });
 
-      if (userMessage.isGuessed) {
+      setMessages({
+        ...userMessage,
+        isWinner,
+        isGuessed: userMessage.isGuessed && !isWinner,
+      });
+
+      if (userMessage.isGuessed && !isWinner) {
         setWinners(user);
       }
 
       if (!userMessage.ownMessage && !isWinner) {
-        socket.emit("send-message", { userMessage, roomId });
+        socket.emit("send-message", {
+          userMessage,
+          roomId,
+          time,
+          drawtime,
+        });
       } else if (isWinner) {
         socket.emit("send-message-winners", {
-          userMessage,
+          userMessage: {
+            ...userMessage,
+            isGuessed: userMessage.isGuessed && !isWinner,
+          },
           ids: winners.map((winner) => winner.id !== user?.id && winner.id),
         });
       }

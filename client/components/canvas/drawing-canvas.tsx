@@ -19,6 +19,8 @@ const DrawingCanvas = () => {
   const {
     currentDrawer,
     hasGameStarted,
+    hasRoundStarted,
+    setRoundState,
     setRounds,
     setDrawtime,
     setGameState,
@@ -37,7 +39,7 @@ const DrawingCanvas = () => {
     };
 
     if (currentDrawer?.id !== user?.id) return;
-    
+
     draw(drawOptions);
     socket.emit("draw", {
       drawOptions: {
@@ -105,6 +107,7 @@ const DrawingCanvas = () => {
 
     socket.on("started-game", (rounds, drawtime, currentDrawer) => {
       setGameState(true);
+      setRoundState(true);
       setRounds(+rounds);
       setDrawtime(+drawtime);
       setCurrentDrawer(currentDrawer);
@@ -137,6 +140,7 @@ const DrawingCanvas = () => {
         />
       );
     }
+
 
     return (
       <canvas

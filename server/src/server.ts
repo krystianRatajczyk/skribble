@@ -13,6 +13,7 @@ import {
   isRoomCreated,
   removeUser,
   setPassword,
+  setPoints,
 } from "./data/rooms";
 import { DrawOptions, Message, User } from "./types/type";
 
@@ -41,7 +42,7 @@ const validateData = (
 
 const joinRoom = (socket: Socket, roomId: string, name: string) => {
   socket.join(roomId);
-  const user = { id: socket.id, name };
+  const user = { id: socket.id, name, isAdmin: false, points: 0 };
 
   addUser(user, roomId);
   const members = getMembers(roomId);
@@ -110,7 +111,17 @@ io.on("connection", (socket) => {
 
   socket.on(
     "send-message",
-    ({ userMessage, roomId }: { userMessage: Message; roomId: string }) => {
+    ({
+      userMessage,
+      roomId,
+      time,
+      drawtime,
+    }: {
+      userMessage: Message;
+      roomId: string;
+      time: number | null;
+      drawtime: number | null;
+    }) => {
       if (userMessage.message !== "") {
         socket.to(roomId).emit("receive-message", {
           ...userMessage,
@@ -120,6 +131,14 @@ io.on("connection", (socket) => {
         });
         if (getPassword(roomId)?.toLocaleLowerCase() === userMessage.message) {
           socket.to(roomId).emit("guessed-password", userMessage.author);
+
+          if (time && drawtime) {
+            setPoints(
+              roomId,
+              userMessage.author,
+              Math.floor((time / drawtime) * 400)
+            );
+          }
         }
       }
     }
@@ -153,6 +172,22 @@ io.on("connection", (socket) => {
           .to(id)
           .emit("sent-message-winners", { ...userMessage, isWinner: true });
       });
+    }
+  );
+
+  socket.on(
+    "get-points",
+    (roomId: string, currentDrawer, winnersLength, membersLength) => {
+      if (membersLength > 0) {
+        setPoints(
+          roomId,
+          currentDrawer,
+          Math.floor((winnersLength / membersLength) * 100)
+        );
+      }
+      
+      const members = getMembers(roomId);
+      socket.to(roomId).emit("got-points", members);
     }
   );
 });

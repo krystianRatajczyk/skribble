@@ -61,9 +61,9 @@ const CreateRoom = ({ roomId }: CreateRoomProps) => {
       "joined-room",
       (user: User, members: User[], roomId: string, currentDrawer: User) => {
         toast.success("Created party ! 🎉", defaultStyle);
-
+        
         setMembers(members);
-        setUser({...user, isAdmin: true});
+        setUser({ ...user, isAdmin: true, points: 0 });
         setCurrentDrawer(currentDrawer);
 
         router.replace(`/${roomId}`);
@@ -109,7 +109,7 @@ const CreateRoom = ({ roomId }: CreateRoomProps) => {
           </div>
         </div>
 
-        <Button type="submit" className="mt-1 w-full">
+        <Button type="submit" className="mt-1 w-full" disabled={isLoading}>
           {isLoading ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (

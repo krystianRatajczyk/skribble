@@ -5,12 +5,12 @@ export let rooms: Record<string, Room> = {};
 export const addUser = (user: User, roomId: string) => {
   if (!(roomId in rooms)) {
     rooms[roomId] = {
-      users: [user],
+      users: [{ ...user, isAdmin: true, points: 0 }],
       currentIndexOfDrawer: 0,
       currentPassword: "",
     };
   } else {
-    rooms[roomId].users.push(user);
+    rooms[roomId].users.push({ ...user, isAdmin: false, points: 0 });
   }
 };
 
@@ -57,5 +57,16 @@ export const setPassword = (roomId: string, password: string) => {
 export const getPassword = (roomId: string) => {
   if (roomId in rooms && rooms[roomId].currentPassword !== "") {
     return rooms[roomId].currentPassword;
+  }
+};
+
+export const setPoints = (roomId: string, user: User, newPoints: number) => {
+  if (roomId in rooms) {
+    rooms[roomId] = {
+      ...rooms[roomId],
+      users: rooms[roomId].users.map((u) =>
+        u.id === user.id ? { ...user, points: newPoints } : u
+      ),
+    };
   }
 };

@@ -1,6 +1,8 @@
 export interface User {
   id: string;
   name: string;
+  isAdmin: boolean;
+  points: number;
 }
 
 export interface Room {
