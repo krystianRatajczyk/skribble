@@ -1,22 +1,38 @@
 import { useGame } from "@/hooks/use-game-store";
+import { useUser } from "@/hooks/use-user-store";
+import { socket } from "@/lib/socket";
 import { User } from "@/types/type";
-import React, { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import React, { useEffect } from "react";
 
 interface RoundOverProps {
   users: User[];
 }
 
 const RoundOver = ({ users }: RoundOverProps) => {
-  const { setPassword, password, setRoundState } = useGame();
+  const { roomId } = useParams();
+  const { user } = useUser();
+  const {
+    password,
+    setRoundState,
+    drawtime,
+    setTime,
+    clearWinners,
+    currentDrawer,
+  } = useGame();
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setPassword(null);
-      setRoundState(true);
+      user?.id === currentDrawer?.id &&
+        socket.emit("restart-round", roomId, drawtime);
     }, 3000);
 
     return () => clearTimeout(timeout);
   }, []);
+
+  if (users.length === 0) {
+    return;
+  }
 
   return (
     <div className="flex items-center justify-center bg-[#4e4e4e59] w-full h-full text-black">

@@ -28,6 +28,10 @@ const DrawingCanvas = () => {
     setGameState,
     setCurrentDrawer,
     password,
+    setPassword,
+    clearWinners,
+    setTime,
+    drawtime,
   } = useGame();
 
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -120,11 +124,20 @@ const DrawingCanvas = () => {
       setRoundState(false);
     });
 
+    socket.on("restarted-round", (newDrawer: User) => {
+      setCurrentDrawer(newDrawer);
+      setRoundState(true);
+      setPassword(null);
+      setTime(drawtime);
+      clearWinners();
+    });
+
     return () => {
       socket.off("update-canvas");
       socket.off("cleared-canvas");
       socket.off("started-game");
       socket.off("ended-round");
+      socket.off("restarted-round");
     };
   }, [socket, draw, canvasRef, hasGameStarted, password]);
 

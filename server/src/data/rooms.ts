@@ -9,6 +9,8 @@ export const addUser = (user: User, roomId: string) => {
       currentIndexOfDrawer: 0,
       currentPassword: "",
       time: 0,
+      rounds: 1,
+      maxRounds: 0,
       roundState: true,
     };
   } else {
@@ -85,6 +87,12 @@ export const setTime = (roomId: string, time: number) => {
   }
 };
 
+export const setMaxRounds = (roomId: string, maxRounds: number) => {
+  if (roomId in rooms) {
+    rooms[roomId] = { ...rooms[roomId], maxRounds };
+  }
+};
+
 export const reduceTime = (roomId: string) => {
   if (roomId in rooms) {
     rooms[roomId] = { ...rooms[roomId], time: rooms[roomId].time - 1 };
@@ -100,5 +108,47 @@ export const setRoundState = (roomId: string, state: boolean) => {
 export const getRoundState = (roomId: string) => {
   if (roomId in rooms) {
     return rooms[roomId].roundState;
+  }
+};
+
+const setNewDrawer = (roomId: string) => {
+  if (roomId in rooms) {
+    let newIndex = rooms[roomId].currentIndexOfDrawer;
+    let newRounds = rooms[roomId].rounds;
+    if (rooms[roomId].currentIndexOfDrawer + 1 < rooms[roomId].users.length) {
+      newIndex += 1;
+    } else {
+      // next turn
+      newIndex = 0;
+      newRounds += 1;
+
+      if (newRounds > rooms[roomId].maxRounds) {
+        // end of game
+      }
+    }
+
+    rooms[roomId] = {
+      ...rooms[roomId],
+      currentIndexOfDrawer: newIndex,
+      rounds: newRounds,
+    };
+
+  }
+};
+
+export const getNewDrawer = (roomId: string) => {
+  setNewDrawer(roomId);
+
+  if (roomId in rooms) {
+    return rooms[roomId].users[rooms[roomId].currentIndexOfDrawer];
+  }
+};
+
+export const clearPoints = (roomId: string) => {
+  if (roomId in rooms) {
+    rooms[roomId] = {
+      ...rooms[roomId],
+      users: rooms[roomId].users.map((user) => ({ ...user, points: 0 })),
+    };
   }
 };

@@ -6,15 +6,18 @@ import { joinRoomSchema } from "./lib/validate";
 import * as z from "zod";
 import {
   addUser,
+  clearPoints,
   deleteRoom,
   getCurrentDrawer,
   getMembers,
+  getNewDrawer,
   getPassword,
   getRoundState,
   getTime,
   isRoomCreated,
   reduceTime,
   removeUser,
+  setMaxRounds,
   setPassword,
   setPoints,
   setRoundState,
@@ -119,12 +122,10 @@ io.on("connection", (socket) => {
     ({
       userMessage,
       roomId,
-      time,
       drawtime,
     }: {
       userMessage: Message;
       roomId: string;
-      time: number | null;
       drawtime: number | null;
     }) => {
       if (userMessage.message !== "") {
@@ -141,6 +142,7 @@ io.on("connection", (socket) => {
         ) {
           socket.to(roomId).emit("guessed-password", userMessage.author);
 
+          const time = getTime(roomId);
           if (time && drawtime) {
             setPoints(
               roomId,
@@ -166,6 +168,7 @@ io.on("connection", (socket) => {
 
   socket.on("start-game", ({ rounds, drawtime, roomId, currentDrawer }) => {
     setTime(roomId, drawtime);
+    setMaxRounds(roomId, rounds);
     socket.to(roomId).emit("started-game", rounds, drawtime, currentDrawer);
   });
 
@@ -213,6 +216,15 @@ io.on("connection", (socket) => {
       socket.to(roomId).emit("ended-round", members);
     }
   );
+
+  socket.on("restart-round", (roomId, drawtime) => {
+    setTime(roomId, drawtime);
+    setPassword(roomId, "");
+    clearPoints(roomId);
+
+    const newDrawer = getNewDrawer(roomId);
+    io.to(roomId).emit("restarted-round", newDrawer);
+  });
 });
 
 const PORT = process.env.PORT || 3001;

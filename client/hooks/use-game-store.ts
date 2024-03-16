@@ -17,6 +17,7 @@ interface GameState {
   setRoundState: (state: boolean) => void;
   setPassword: (password: string | null) => void;
   setWinners: (user: User) => void;
+  clearWinners: () => void;
   setTime: (time: number | null) => void;
 }
 
@@ -39,5 +40,6 @@ export const useGame = create<GameState>((set) => ({
     set((prev) => ({
       winners: [...prev.winners, winner],
     })),
+  clearWinners: () => set({ winners: [] }),
   setTime: (time) => set({ time }),
 }));

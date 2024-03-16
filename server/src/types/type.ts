@@ -10,8 +10,10 @@ export interface Room {
   currentIndexOfDrawer: number;
   currentPassword: string;
   time: number;
+  rounds: number;
+  maxRounds: number;
   roundState: boolean;
-} 
+}
 
 export interface Message {
   author: User;
