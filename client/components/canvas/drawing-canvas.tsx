@@ -1,6 +1,6 @@
 import { useCanvas } from "@/hooks/use-canvas-store";
 import { useDraw } from "@/hooks/use-draw";
-import { draw } from "@/lib/utils";
+import { addPoints, draw } from "@/lib/utils";
 import { DrawProps, User } from "@/types/type";
 import React, { useEffect, useRef, useState } from "react";
 import ToolBox from "./toolbox";
@@ -12,12 +12,14 @@ import GameSettings from "./game-settings";
 import ChoosePassword from "./choose-password";
 import Notification from "../layout/notification";
 import RoundOver from "./round-over";
+import { useMembers } from "@/hooks/use-member-store";
 
 const DrawingCanvas = () => {
   const [pointMembers, setPointMembers] = useState<User[]>([]);
   const { strokeColor, strokeWidth } = useCanvas();
   const { roomId } = useParams();
   const { user } = useUser();
+  const { members, setMembers } = useMembers();
   const {
     currentDrawer,
     hasGameStarted,
@@ -119,8 +121,9 @@ const DrawingCanvas = () => {
       setCurrentDrawer(currentDrawer);
     });
 
-    socket.on("ended-round", (members: User[]) => {
-      setPointMembers(members);
+    socket.on("ended-round", (newMembers: User[]) => {
+      setPointMembers(newMembers);
+      setMembers(addPoints(members, newMembers));
       setRoundState(false);
     });
 

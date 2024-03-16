@@ -14,10 +14,7 @@ const RoundOver = ({ users }: RoundOverProps) => {
   const { user } = useUser();
   const {
     password,
-    setRoundState,
     drawtime,
-    setTime,
-    clearWinners,
     currentDrawer,
   } = useGame();
 

@@ -1,5 +1,5 @@
 import { PASSWORDS } from "@/constants/passwords";
-import { DrawProps } from "@/types/type";
+import { DrawProps, User } from "@/types/type";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -32,4 +32,19 @@ export const getPasswords = (amount: number): string[] => {
   copy.sort(() => Math.random() - 0.5);
 
   return copy.slice(0, amount);
+};
+
+export const addPoints = (members: User[], membersWithPoints: User[]) => {
+  const newMembers = members.map((member) => {
+    const user = membersWithPoints.find((m) => m.id === member.id);
+    return {
+      ...member,
+      points:
+        user?.points !== undefined
+          ? member.points + user.points
+          : member.points,
+    };
+  });
+
+  return newMembers;
 };
