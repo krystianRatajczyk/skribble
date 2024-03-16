@@ -1,8 +1,8 @@
 import { useCanvas } from "@/hooks/use-canvas-store";
 import { useDraw } from "@/hooks/use-draw";
 import { draw } from "@/lib/utils";
-import { DrawProps } from "@/types/type";
-import React, { useEffect, useRef } from "react";
+import { DrawProps, User } from "@/types/type";
+import React, { useEffect, useRef, useState } from "react";
 import ToolBox from "./toolbox";
 import { socket } from "@/lib/socket";
 import { useParams } from "next/navigation";
@@ -11,8 +11,10 @@ import { useGame } from "@/hooks/use-game-store";
 import GameSettings from "./game-settings";
 import ChoosePassword from "./choose-password";
 import Notification from "../layout/notification";
+import RoundOver from "./round-over";
 
 const DrawingCanvas = () => {
+  const [pointMembers, setPointMembers] = useState<User[]>([]);
   const { strokeColor, strokeWidth } = useCanvas();
   const { roomId } = useParams();
   const { user } = useUser();
@@ -113,10 +115,16 @@ const DrawingCanvas = () => {
       setCurrentDrawer(currentDrawer);
     });
 
+    socket.on("ended-round", (members: User[]) => {
+      setPointMembers(members);
+      setRoundState(false);
+    });
+
     return () => {
       socket.off("update-canvas");
       socket.off("cleared-canvas");
       socket.off("started-game");
+      socket.off("ended-round");
     };
   }, [socket, draw, canvasRef, hasGameStarted, password]);
 
@@ -141,6 +149,9 @@ const DrawingCanvas = () => {
       );
     }
 
+    if (hasGameStarted && !hasRoundStarted) {
+      return <RoundOver users={pointMembers} />;
+    }
 
     return (
       <canvas

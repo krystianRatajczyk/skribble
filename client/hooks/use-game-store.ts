@@ -15,9 +15,9 @@ interface GameState {
   setCurrentDrawer: (currentDrawer: User) => void;
   setGameState: (state: boolean) => void;
   setRoundState: (state: boolean) => void;
-  setPassword: (password: string) => void;
+  setPassword: (password: string | null) => void;
   setWinners: (user: User) => void;
-  setTime: (value: number | ((prev: number | null) => number | null) | null) => void;
+  setTime: (time: number | null) => void;
 }
 
 export const useGame = create<GameState>((set) => ({
@@ -39,11 +39,5 @@ export const useGame = create<GameState>((set) => ({
     set((prev) => ({
       winners: [...prev.winners, winner],
     })),
-  setTime: (value) => {
-    //achieve similiar behaviour like useState
-    set((prev) => {
-      const newTime = typeof value === "function" ? value(prev.time) : value;
-      return { time: newTime };
-    });
-  },
+  setTime: (time) => set({ time }),
 }));

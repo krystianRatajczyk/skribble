@@ -3,34 +3,25 @@
 import { useGame } from "@/hooks/use-game-store";
 import { useMembers } from "@/hooks/use-member-store";
 import { socket } from "@/lib/socket";
-import { User } from "@/types/type";
 import { useParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 const Timer = () => {
   const { roomId } = useParams();
-  const {
-    currentDrawer,
-    setRoundState,
-    drawtime,
-    password,
-    winners,
-    time,
-    setTime,
-  } = useGame();
-  const { members, setMembers } = useMembers();
-  const [count, setCount] = useState(false);
+  const { currentDrawer, setRoundState, drawtime, winners, time, setTime } =
+    useGame();
+  const { members } = useMembers();
 
   const roundOver = () => {
-    setCount(false);
-    setRoundState(false);
     socket.emit(
-      "get-points",
+      "end-round",
       roomId,
       currentDrawer,
       winners.length,
       members.length - 1
     );
+
+    setRoundState(false);
   };
 
   useEffect(() => {
@@ -38,18 +29,8 @@ const Timer = () => {
   }, [drawtime]);
 
   useEffect(() => {
-    setCount(password !== null);
-  }, [password]);
-
-  useEffect(() => {
-    if (count && drawtime) {
-      const interval = setInterval(() => {
-        setTime((prev) => (typeof prev === "number" ? prev - 1 : null));
-      }, 1000);
-
-      return () => clearInterval(interval);
-    }
-  }, [count, drawtime]);
+    socket.on("reduce-time", (t) => setTime(t));
+  }, [socket]);
 
   useEffect(() => {
     if (time === 0) {
@@ -67,16 +48,6 @@ const Timer = () => {
       roundOver();
     }
   }, [winners]);
-
-  useEffect(() => {
-    socket.on("got-points", (members: User[]) => {
-      setMembers(members);
-    });
-
-    return () => {
-      socket.off("got-points");
-    };
-  }, [socket]);
 
   if (!drawtime) {
     return null;

@@ -35,7 +35,8 @@ const ChatInput = () => {
       message: values.message,
       author: { ...user! },
       isGuessed:
-        password?.toLocaleLowerCase() === values.message.toLocaleLowerCase() &&
+        password?.trim().toLocaleLowerCase() ===
+          values.message.trim().toLocaleLowerCase() &&
         user?.id !== currentDrawer?.id,
       ownMessage: user?.id === currentDrawer?.id && password !== null,
     };

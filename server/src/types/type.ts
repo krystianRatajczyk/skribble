@@ -9,7 +9,9 @@ export interface Room {
   users: User[];
   currentIndexOfDrawer: number;
   currentPassword: string;
-}
+  time: number;
+  roundState: boolean;
+} 
 
 export interface Message {
   author: User;

@@ -10,10 +10,15 @@ import {
   getCurrentDrawer,
   getMembers,
   getPassword,
+  getRoundState,
+  getTime,
   isRoomCreated,
+  reduceTime,
   removeUser,
   setPassword,
   setPoints,
+  setRoundState,
+  setTime,
 } from "./data/rooms";
 import { DrawOptions, Message, User } from "./types/type";
 
@@ -127,9 +132,13 @@ io.on("connection", (socket) => {
           ...userMessage,
           isGuessed:
             userMessage.isGuessed &&
-            getPassword(roomId)?.toLocaleLowerCase() === userMessage.message,
+            getPassword(roomId)?.trim().toLocaleLowerCase() ===
+              userMessage.message.trim().toLocaleLowerCase(),
         });
-        if (getPassword(roomId)?.toLocaleLowerCase() === userMessage.message) {
+        if (
+          getPassword(roomId)?.toLocaleLowerCase() ===
+          userMessage.message.trim().toLocaleLowerCase()
+        ) {
           socket.to(roomId).emit("guessed-password", userMessage.author);
 
           if (time && drawtime) {
@@ -156,12 +165,26 @@ io.on("connection", (socket) => {
   });
 
   socket.on("start-game", ({ rounds, drawtime, roomId, currentDrawer }) => {
+    setTime(roomId, drawtime);
     socket.to(roomId).emit("started-game", rounds, drawtime, currentDrawer);
   });
 
+  // start new round
   socket.on("change-password", (password, roomId) => {
     setPassword(roomId, password);
+    setRoundState(roomId, true);
+
     socket.to(roomId).emit("changed-password", password);
+
+    const interval = setInterval(() => {
+      if (!getRoundState(roomId)) {
+        clearInterval(interval);
+        return;
+      }
+
+      reduceTime(roomId);
+      io.to(roomId).emit("reduce-time", getTime(roomId));
+    }, 1000);
   });
 
   socket.on(
@@ -176,8 +199,8 @@ io.on("connection", (socket) => {
   );
 
   socket.on(
-    "get-points",
-    (roomId: string, currentDrawer, winnersLength, membersLength) => {
+    "end-round",
+    (roomId, currentDrawer, winnersLength, membersLength) => {
       if (membersLength > 0) {
         setPoints(
           roomId,
@@ -185,9 +208,9 @@ io.on("connection", (socket) => {
           Math.floor((winnersLength / membersLength) * 100)
         );
       }
-      
+      setRoundState(roomId, false);
       const members = getMembers(roomId);
-      socket.to(roomId).emit("got-points", members);
+      socket.to(roomId).emit("ended-round", members);
     }
   );
 });
