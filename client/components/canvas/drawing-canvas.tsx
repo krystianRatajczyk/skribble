@@ -14,12 +14,14 @@ import Notification from "../layout/notification";
 import RoundOver from "./round-over";
 import { useMembers } from "@/hooks/use-member-store";
 import GameOver from "./game-over";
+import { useLanguage } from "@/hooks/use-language";
 
 const DrawingCanvas = () => {
   const [pointMembers, setPointMembers] = useState<User[]>([]);
   const { strokeColor, strokeWidth } = useCanvas();
   const { roomId } = useParams();
   const { user } = useUser();
+  const { language } = useLanguage();
   const { members, setMembers } = useMembers();
   const {
     currentDrawer,
@@ -158,7 +160,7 @@ const DrawingCanvas = () => {
       }
 
       if (!user?.isAdmin) {
-        return <Notification notification="Waiting for host to start game" />;
+        return <Notification notification={language.waiting} />;
       }
 
       return <GameSettings />;
@@ -171,7 +173,7 @@ const DrawingCanvas = () => {
 
       return (
         <Notification
-          notification={`${currentDrawer?.name} is choosing the word`}
+          notification={`${currentDrawer?.name} ${language.choosingTheWord}`}
         />
       );
     }
@@ -205,7 +207,7 @@ const DrawingCanvas = () => {
 
       <ToolBox
         clear={clear}
-        hidden={currentDrawer?.id !== user?.id || !hasGameStarted}
+        hidden={currentDrawer?.id !== user?.id || !hasGameStarted || !password}
       />
     </>
   );

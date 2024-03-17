@@ -30,6 +30,7 @@ import { useMembers } from "@/hooks/use-member-store";
 import { useUser } from "@/hooks/use-user-store";
 import { useRouter } from "next/navigation";
 import { useGame } from "@/hooks/use-game-store";
+import { useLanguage } from "@/hooks/use-language";
 
 const formSchema = z.object({
   username: z
@@ -48,6 +49,7 @@ const JoinRoom = () => {
   const { setMembers } = useMembers();
   const { setUser } = useUser();
   const { setCurrentDrawer } = useGame();
+  const { language } = useLanguage();
 
   const router = useRouter();
 
@@ -79,11 +81,11 @@ const JoinRoom = () => {
           className="bg-transparent w-full border-[#1e293b] dark:hover:bg-[#1e293b] 
           hover:bg-[#f1f5f9]"
         >
-          Join a room
+          {language.joinRoom}
         </Button>
       </DialogTrigger>
       <DialogContent className="dark:bg-[#020817] border-[#1e293b] max-w-[420px] w-[90vw]">
-        <DialogTitle className="mb-2">Join a room</DialogTitle>
+        <DialogTitle className="mb-2">{language.joinRoom}</DialogTitle>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -117,7 +119,7 @@ const JoinRoom = () => {
                       disabled={isLoading}
                       className="px-4 bg-transparent focus-visible:ring-0 
                   focus-visible:ring-offset-0 border-[#1e293b] dark:text-[#949b94] dark:placeholder:text-[#949b94] placeholder:text-[#5b5c5b]"
-                      placeholder="Room ID"
+                      placeholder={language.roomIdLabel}
                       {...field}
                     />
                   </FormControl>
@@ -130,7 +132,7 @@ const JoinRoom = () => {
               {isLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
-                "Join"
+                language.join
               )}
             </Button>
           </form>

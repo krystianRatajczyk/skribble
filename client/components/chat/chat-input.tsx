@@ -14,6 +14,7 @@ import { useUser } from "@/hooks/use-user-store";
 import { useChat } from "@/hooks/use-chat-store";
 import { useGame } from "@/hooks/use-game-store";
 import { withoutPolishSigns } from "@/lib/utils";
+import { useLanguage } from "@/hooks/use-language";
 
 const formSchema = z.object({
   message: z.string().min(1),
@@ -22,6 +23,7 @@ const formSchema = z.object({
 const ChatInput = () => {
   const { user } = useUser();
   const { setMessages } = useChat();
+  const { language } = useLanguage();
   const { password, currentDrawer, setWinners, winners, time, drawtime } =
     useGame();
   const { roomId } = useParams();
@@ -38,7 +40,7 @@ const ChatInput = () => {
       isGuessed:
         (password?.trim().toLocaleLowerCase() ===
           values.message.trim().toLocaleLowerCase() ||
-          withoutPolishSigns(password?.trim()!, values.message)) &&
+          withoutPolishSigns(password?.trim()!, values.message.trim())) &&
         user?.id !== currentDrawer?.id,
       ownMessage: user?.id === currentDrawer?.id && password !== null,
     };
@@ -112,8 +114,8 @@ const ChatInput = () => {
                 <div className="flex items-center justify-center border-[1px] dark:border-[#1e293b] border-[#dde9f9] rounded-md px-2 pr-4">
                   <Input
                     className="w-fullbg-transparent focus-visible:ring-0 
-                focus-visible:ring-offset-0 px-2 border-0 dark:text-[#949b94] dark:placeholder:text-[#949b94] placeholder:text-[#5b5c5b]"
-                    placeholder="Message"
+                    focus-visible:ring-offset-0 px-2 border-0 dark:text-[#949b94] dark:placeholder:text-[#949b94] placeholder:text-[#5b5c5b]"
+                    placeholder={language.message}
                     {...field}
                   />
                   <SendHorizontal

@@ -1,3 +1,4 @@
+import { useLanguage } from "@/hooks/use-language";
 import { Message } from "@/types/type";
 import React from "react";
 
@@ -6,11 +7,13 @@ interface ChatItemProps {
 }
 
 const ChatItem = ({ message }: ChatItemProps) => {
+  const { language } = useLanguage();
+
   if (message.isGuessed) {
     return (
       <div className="px-3 py-1">
         <span className="text-sm font-bold text-emerald-400">
-          {message.author.name} guessed the word !
+          {message.author.name} {language.guesssed}
         </span>
       </div>
     );

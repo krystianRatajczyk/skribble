@@ -1,4 +1,5 @@
 import { useGame } from "@/hooks/use-game-store";
+import { useLanguage } from "@/hooks/use-language";
 import { useUser } from "@/hooks/use-user-store";
 import { socket } from "@/lib/socket";
 import { User } from "@/types/type";
@@ -13,6 +14,7 @@ const RoundOver = ({ users }: RoundOverProps) => {
   const { roomId } = useParams();
   const { user } = useUser();
   const { password, drawtime, currentDrawer } = useGame();
+  const { language } = useLanguage();
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -31,7 +33,7 @@ const RoundOver = ({ users }: RoundOverProps) => {
     <div className="flex items-center justify-center bg-[#4e4e4e59] dark:bg-[#35394a] w-full h-full text-white">
       <div className="min-w-[400px] rounded-md px-5 py-3 flex flex-col items-center gap-3">
         <p className="text-center font-semibold text-[30px] ">
-          The word was <span className="font-bold">{password}</span>
+          {language.wordWas} <span className="font-bold">{password}</span>
         </p>
 
         <div className="w-full">

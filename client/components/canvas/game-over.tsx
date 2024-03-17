@@ -8,12 +8,14 @@ import { useGame } from "@/hooks/use-game-store";
 import { socket } from "@/lib/socket";
 import { useParams } from "next/navigation";
 import { useChat } from "@/hooks/use-chat-store";
+import { useLanguage } from "@/hooks/use-language";
 
 const GameOver = () => {
   const { roomId } = useParams();
   const { members, setMembers } = useMembers();
   const { user } = useUser();
   const { clearChat } = useChat();
+  const { language } = useLanguage();
 
   const {
     setGameState,
@@ -68,31 +70,42 @@ const GameOver = () => {
         <span className="font-bold text-[35px] -mt-1.5 dark:text-[#caa36d] text-[#b08e3c]">
           {memberWithPlace[0]?.name}
         </span>
-        is the winner!
+        {language.winner}
       </span>
       <div className="flex items-end justify-center gap-1 ">
-        <Place
-          user={memberWithPlace[1]}
-          text="dark:text-[#c0c0c0] text-[#5d5c5e]"
-          border="dark:border-[#c0c0c0] border-[#5d5c5e]"
-          className="h-[60px] border-r-[0px] rounded-tr-none "
-        />
+        {memberWithPlace.length > 1 ? (
+          <Place
+            user={memberWithPlace[1]}
+            text="dark:text-[#c0c0c0] text-[#5d5c5e]"
+            border="dark:border-[#c0c0c0] border-[#5d5c5e]"
+            className="h-[60px] border-r-[0px] rounded-tr-none "
+          />
+        ) : (
+          <div className="w-[300px]" />
+        )}
         {/*2nd */}
-        {memberWithPlace.length > 1 && (
+        {memberWithPlace.length > 0 ? (
           <Place
             user={memberWithPlace[0]}
             text="dark:text-[#ffc532] text-[#94762c]"
             border="dark:border-[#ffc532] border-[#94762c]"
             className="h-[80px]"
-          /> //1st
+            first
+          />
+        ) : (
+          <div className="w-[300px]" />
         )}
-        {memberWithPlace.length > 2 && (
+        {/* //1st */}
+        {memberWithPlace.length > 2 ? (
           <Place
             user={memberWithPlace[2]}
             text="text-[#7a3f1b] dark:text-[#be6029]"
             border="border-[#7a3f1b] dark:border-[#be6029]"
             className="h-[40px] border-l-[0px] rounded-tl-none"
-          /> //3rd
+            // 3rd
+          />
+        ) : (
+          <div className="w-[300px]" />
         )}
       </div>
       {user?.isAdmin && (
@@ -100,7 +113,7 @@ const GameOver = () => {
           className="bg-white dark:bg-[#091125] text-[#091125] dark:text-white border-[2px] dark:border-[#1e293b] border-[#dde9f9] px-4 py-2 text-[19px] hover:dark:bg-[#191e2c] hover:bg-[#dfdddd] mt-5"
           onClick={newGame}
         >
-          New Game
+          {language.newGame}
         </Button>
       )}
     </div>

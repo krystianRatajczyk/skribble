@@ -12,7 +12,7 @@ export const joinRoomSchema = z.object({
 });
 
 export const withoutPolishSigns = (str1: string, str2: string) => {
-  const diacriticsMap: Record<string, string> = {
+  const polishSigns: Record<string, string> = {
     ą: "a",
     ć: "c",
     ę: "e",
@@ -23,16 +23,20 @@ export const withoutPolishSigns = (str1: string, str2: string) => {
     ź: "z",
     ż: "z",
   };
+  if (str1.length !== str2.length) {
+    return false;
+  }
 
-  const removeDiacritics = (str: string) => {
-    return str.replace(
-      /[ąćęłńóśźż]/g,
-      (match) => diacriticsMap[match.toLowerCase()] || match
-    );
-  };
+  str1 = str1.toLowerCase();
+  str2 = str2.toLowerCase();
 
-  const normalizedStr1 = removeDiacritics(str1.toLowerCase());
-  const normalizedStr2 = removeDiacritics(str2.toLowerCase());
-
-  return normalizedStr1 === normalizedStr2;
+  return Array.from(str1).every((letter, index) => {
+    if (letter !== str2[index]) {
+      if (letter in polishSigns) {
+        return polishSigns[letter] === str2[index];
+      }
+      return false;
+    }
+    return true;
+  });
 };

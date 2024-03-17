@@ -3,9 +3,11 @@
 import { useChat } from "@/hooks/use-chat-store";
 import React, { useEffect, useRef } from "react";
 import ChatItem from "./chat-item";
+import { useLanguage } from "@/hooks/use-language";
 
 const Chat = () => {
   const { messages } = useChat();
+  const { language } = useLanguage();
 
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
@@ -22,7 +24,7 @@ const Chat = () => {
 
   return (
     <div className="w-full flex flex-col items-center justify-center flex-1 overflow-auto mt-3">
-      <p className="font-semibold text-xl">Chat</p>
+      <p className="font-semibold text-xl">{language.chat}</p>
       <div
         ref={chatContainerRef}
         className="mt-3 dark:border-[#1e293b] border-[#dde9f9] border-[1px] rounded-md overflow-hidden overflow-y-auto no-scrollbar 

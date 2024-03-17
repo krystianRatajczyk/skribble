@@ -24,6 +24,7 @@ import { User } from "@/types/type";
 import { useMembers } from "@/hooks/use-member-store";
 import { useUser } from "@/hooks/use-user-store";
 import { useGame } from "@/hooks/use-game-store";
+import { useLanguage } from "@/hooks/use-language";
 
 interface CreateRoomProps {
   roomId: string;
@@ -41,6 +42,7 @@ const CreateRoom = ({ roomId }: CreateRoomProps) => {
   const { setMembers } = useMembers();
   const { setUser } = useUser();
   const { setCurrentDrawer } = useGame();
+  const { language } = useLanguage();
 
   const router = useRouter();
 
@@ -61,7 +63,7 @@ const CreateRoom = ({ roomId }: CreateRoomProps) => {
       "joined-room",
       (user: User, members: User[], roomId: string, currentDrawer: User) => {
         toast.success("Created party ! 🎉", defaultStyle);
-        
+
         setMembers(members);
         setUser({ ...user, isAdmin: true, points: 0 });
         setCurrentDrawer(currentDrawer);
@@ -83,7 +85,7 @@ const CreateRoom = ({ roomId }: CreateRoomProps) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="font-semibold text-[15px] text-foreground">
-                Username
+                {language.usernameLabel}
               </FormLabel>
               <FormControl>
                 <Input
@@ -100,7 +102,9 @@ const CreateRoom = ({ roomId }: CreateRoomProps) => {
         />
 
         <div className="flex flex-col space-y-2">
-          <span className="font-semibold text-[15px]">Room ID</span>
+          <span className="font-semibold text-[15px]">
+            {language.roomIdLabel}
+          </span>
           <div className="h-10 flex items-center justify-between py-2 px-4 rounded-md border-[1px] border-[#1e293b] ">
             <span className="dark:text-[#949b94] text-[#5b5c5b] text-sm">
               {roomId}
@@ -113,7 +117,7 @@ const CreateRoom = ({ roomId }: CreateRoomProps) => {
           {isLoading ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
-            "Create a Room"
+            language.createRoom
           )}
         </Button>
       </form>

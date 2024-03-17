@@ -1,3 +1,4 @@
+import { useLanguage } from "@/hooks/use-language";
 import { User } from "@/types/type";
 import { Pencil } from "lucide-react";
 import React from "react";
@@ -19,6 +20,8 @@ const LeaderboardItem = ({
   place,
   isWinner,
 }: LeaderboardItemProps) => {
+  const { language } = useLanguage();
+
   return (
     <div
       className={`w-full flex items-center 
@@ -44,7 +47,9 @@ const LeaderboardItem = ({
         >
           {member.name} {isOwner && "(You)"}
         </span>
-        <p className="font-semibold text-[13px]">{member.points} points</p>
+        <p className="font-semibold text-[13px]">
+          {member.points} {language.points}
+        </p>
       </div>
       <div className="absolute top-3.5 right-5">
         {isDrawer && <Pencil className="w-5 h-5" />}

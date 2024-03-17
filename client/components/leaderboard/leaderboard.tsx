@@ -3,11 +3,13 @@ import React from "react";
 import LeaderboardItem from "./leaderboard-item";
 import { useUser } from "@/hooks/use-user-store";
 import { useGame } from "@/hooks/use-game-store";
+import { useLanguage } from "@/hooks/use-language";
 
 const LeaderBoard = () => {
   const { user } = useUser();
   const { currentDrawer, hasGameStarted, password, winners } = useGame();
   const { members } = useMembers();
+  const { language } = useLanguage();
 
   members.sort((a, b) => {
     return b.points - a.points;
@@ -18,7 +20,7 @@ const LeaderBoard = () => {
 
   return (
     <div className="flex flex-col items-center justify-start flex-1 overflow-scroll no-scrollbar w-[300px] ">
-      <p className="font-semibold text-xl mt-3">Leaderboard</p>
+      <p className="font-semibold text-xl mt-3">{language.leaderboard}</p>
       {members.length > 0 && (
         <div className="mt-3 dark:border-[#1e293b] border-[#dde9f9] border-[1px] rounded-md overflow-hidden overflow-y-auto no-scrollbar w-full">
           {members?.map((member, index) => {

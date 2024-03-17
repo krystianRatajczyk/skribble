@@ -4,6 +4,7 @@ import { socket } from "@/lib/socket";
 import { useUser } from "@/hooks/use-user-store";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import { useLanguage } from "@/hooks/use-language";
 
 interface LeaveRoomProps {
   roomId: string;
@@ -13,6 +14,7 @@ const LeaveButton = ({ roomId }: LeaveRoomProps) => {
   const [isLeaving, setIsLeaving] = useState(false);
   const { user } = useUser();
   const router = useRouter();
+  const { language } = useLanguage();
 
   const leaveRoom = () => {
     setIsLeaving(true);
@@ -24,13 +26,17 @@ const LeaveButton = ({ roomId }: LeaveRoomProps) => {
   };
 
   return (
-      <Button
-        variant="ghost"
-        onClick={leaveRoom}
-        className="w-full bg-red-600 mt-3 dark:hover:bg-[#1e293b] hover:bg-[#c5c5c5]"
-      >
-        {isLeaving ? <Loader2 className="h-4 w-4 animate-spin" /> : "Leave"}
-      </Button>
+    <Button
+      variant="ghost"
+      onClick={leaveRoom}
+      className="w-full bg-red-600 mt-3 dark:hover:bg-[#1e293b] hover:bg-[#c5c5c5]"
+    >
+      {isLeaving ? (
+        <Loader2 className="h-4 w-4 animate-spin" />
+      ) : (
+        language.leave
+      )}
+    </Button>
   );
 };
 

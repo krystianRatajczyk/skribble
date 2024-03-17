@@ -7,12 +7,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useLanguage } from "@/hooks/use-language";
 
 interface ClearButtonProps {
   clear: () => void;
 }
 
 const ClearButton = ({ clear }: ClearButtonProps) => {
+  const { language } = useLanguage();
+  
   return (
     <TooltipProvider>
       <Tooltip>
@@ -22,7 +25,7 @@ const ClearButton = ({ clear }: ClearButtonProps) => {
           </Button>
         </TooltipTrigger>
         <TooltipContent>
-          <p>Clear</p>
+          <p>{language.clear}</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

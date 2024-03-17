@@ -41,6 +41,7 @@ import CopyButton from "../form/copy-button";
 import { socket } from "@/lib/socket";
 import { useGame } from "@/hooks/use-game-store";
 import { useUser } from "@/hooks/use-user-store";
+import { useLanguage } from "@/hooks/use-language";
 
 const formSchema = z.object({
   drawtime: z.string().min(1, "Please select drawtime"),
@@ -51,13 +52,9 @@ const GameSettings = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const { members } = useMembers();
   const { user } = useUser();
+  const { language } = useLanguage();
   const { roomId } = useParams() as { roomId: string };
-  const {
-    setRounds,
-    setDrawtime,
-    setGameState,
-    setRoundState,
-  } = useGame();
+  const { setRounds, setDrawtime, setGameState, setRoundState } = useGame();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -82,11 +79,13 @@ const GameSettings = () => {
       <Dialog open={modalOpen} onOpenChange={() => setModalOpen(false)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="mb-1">You can't start game :(</DialogTitle>
+            <DialogTitle className="mb-1">{language.cantStart}</DialogTitle>
             <DialogDescription>
-              You are alone in that room. Invite more people to play.
+              {language.cantStartDescription}
               <div className="flex gap-1 flex-row items-center mt-3 gap-x-3">
-                <span className="font-semibold text-[15px]">Room ID</span>
+                <span className="font-semibold text-[15px]">
+                  {language.roomIdLabel}
+                </span>
                 <div className="flex items-center justify-between py-2 px-4 rounded-md border-[1px] border-[#1e293b] gap-4">
                   <span className="dark:text-[#949b94] text-[#5b5c5b] text-sm">
                     {roomId}
@@ -100,10 +99,8 @@ const GameSettings = () => {
       </Dialog>
       <Card className="w-[90vw] max-w-[400px] dark:bg-[#020817] dark:border-[#1e293b] border-[#b7b8b9]">
         <CardHeader>
-          <CardTitle>Game settings</CardTitle>
-          <CardDescription>
-            Select draw time and number of round!
-          </CardDescription>
+          <CardTitle>{language.gameSettings}</CardTitle>
+          <CardDescription>{language.gameSettingsDescription}</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -119,7 +116,7 @@ const GameSettings = () => {
                     <div className="w-full flex items-center justify-between">
                       <div className="flex items-center gap-x-2">
                         <Timer />
-                        Drawtime
+                        {language.drawtimeLabel}
                       </div>
                       <Select
                         onValueChange={field.onChange}
@@ -127,7 +124,7 @@ const GameSettings = () => {
                       >
                         <FormControl>
                           <SelectTrigger className="w-[180px] ring-0 ring-offset-0 focus:ring-0 focus:ring-offset-0">
-                            <SelectValue placeholder="Drawtime" />
+                            <SelectValue placeholder={language.drawtimeLabel} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -154,7 +151,7 @@ const GameSettings = () => {
                     <div className="w-full flex items-center justify-between ">
                       <div className="flex items-center gap-x-2">
                         <RefreshCw />
-                        Rounds
+                        {language.roundsLabel}
                       </div>
                       <Select
                         onValueChange={field.onChange}
@@ -162,7 +159,7 @@ const GameSettings = () => {
                       >
                         <FormControl>
                           <SelectTrigger className="w-[180px] ring-0 ring-offset-0 focus:ring-0 focus:ring-offset-0">
-                            <SelectValue placeholder="Rounds" />
+                            <SelectValue placeholder={language.roundsLabel} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -184,7 +181,7 @@ const GameSettings = () => {
 
               <Button className="flex gap-x-3 items-center" type="submit">
                 <PartyPopper />
-                <span className="text-semibold text-lg">Play</span>
+                <span className="text-semibold text-lg">{language.play}</span>
               </Button>
             </form>
           </Form>
