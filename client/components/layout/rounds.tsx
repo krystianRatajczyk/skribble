@@ -1,11 +1,23 @@
 "use client";
 
 import { useGame } from "@/hooks/use-game-store";
-import React, { useState } from "react";
+import { socket } from "@/lib/socket";
+import React, { useEffect, useState } from "react";
 
 const Rounds = () => {
   const [currentRound, setCurrentRound] = useState(1);
   const { rounds } = useGame();
+
+  useEffect(() => {
+    socket.on("next-round", (r) => {
+      setCurrentRound(r);
+    });
+
+    return () => {
+      socket.off("next-round");
+      socket.off("game-over");
+    };
+  }, [socket]);
 
   if (!rounds) {
     return null;

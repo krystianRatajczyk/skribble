@@ -93,6 +93,12 @@ export const setMaxRounds = (roomId: string, maxRounds: number) => {
   }
 };
 
+export const setRounds = (roomId: string, rounds: number) => {
+  if (roomId in rooms) {
+    rooms[roomId] = { ...rooms[roomId], rounds };
+  }
+};
+
 export const reduceTime = (roomId: string) => {
   if (roomId in rooms) {
     rooms[roomId] = { ...rooms[roomId], time: rooms[roomId].time - 1 };
@@ -121,10 +127,6 @@ const setNewDrawer = (roomId: string) => {
       // next turn
       newIndex = 0;
       newRounds += 1;
-
-      if (newRounds > rooms[roomId].maxRounds) {
-        // end of game
-      }
     }
 
     rooms[roomId] = {
@@ -132,7 +134,6 @@ const setNewDrawer = (roomId: string) => {
       currentIndexOfDrawer: newIndex,
       rounds: newRounds,
     };
-
   }
 };
 
@@ -150,5 +151,17 @@ export const clearPoints = (roomId: string) => {
       ...rooms[roomId],
       users: rooms[roomId].users.map((user) => ({ ...user, points: 0 })),
     };
+  }
+};
+
+export const getRounds = (roomId: string) => {
+  if (roomId in rooms) {
+    return rooms[roomId].rounds;
+  }
+};
+
+export const getMaxRounds = (roomId: string) => {
+  if (roomId in rooms) {
+    return rooms[roomId].maxRounds;
   }
 };

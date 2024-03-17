@@ -5,6 +5,7 @@ import React from "react";
 interface LeaderboardItemProps {
   member: User;
   index: number;
+  place: number;
   isOwner: boolean;
   isDrawer: boolean;
 }
@@ -14,6 +15,7 @@ const LeaderboardItem = ({
   index,
   isOwner,
   isDrawer,
+  place,
 }: LeaderboardItemProps) => {
   return (
     <div
@@ -23,7 +25,7 @@ const LeaderboardItem = ({
     }`}
     >
       <p className="flex flex-start flex-row -mt-4 font-semibold text-[15px]">
-        #{index}
+        #{place}
       </p>
 
       <div className="flex flex-col ">

@@ -10,9 +10,9 @@ interface GameState {
   password: string | null;
   winners: User[];
   time: number | null;
-  setRounds: (rounds: number) => void;
-  setDrawtime: (time: number) => void;
-  setCurrentDrawer: (currentDrawer: User) => void;
+  setRounds: (rounds: number | null) => void;
+  setDrawtime: (time: number | null) => void;
+  setCurrentDrawer: (currentDrawer: User | null) => void;
   setGameState: (state: boolean) => void;
   setRoundState: (state: boolean) => void;
   setPassword: (password: string | null) => void;

@@ -13,6 +13,7 @@ import ChoosePassword from "./choose-password";
 import Notification from "../layout/notification";
 import RoundOver from "./round-over";
 import { useMembers } from "@/hooks/use-member-store";
+import GameOver from "./game-over";
 
 const DrawingCanvas = () => {
   const [pointMembers, setPointMembers] = useState<User[]>([]);
@@ -113,12 +114,12 @@ const DrawingCanvas = () => {
       clear();
     });
 
-    socket.on("started-game", (rounds, drawtime, currentDrawer) => {
+    socket.on("started-game", (rounds, drawtime, newDrawer) => {
       setGameState(true);
       setRoundState(true);
       setRounds(+rounds);
       setDrawtime(+drawtime);
-      setCurrentDrawer(currentDrawer);
+      setCurrentDrawer(newDrawer);
     });
 
     socket.on("ended-round", (newMembers: User[]) => {
@@ -135,6 +136,10 @@ const DrawingCanvas = () => {
       clearWinners();
     });
 
+    socket.on("game-over", () => {
+      setGameState(false);
+    });
+
     return () => {
       socket.off("update-canvas");
       socket.off("cleared-canvas");
@@ -146,6 +151,10 @@ const DrawingCanvas = () => {
 
   const renderContent = () => {
     if (!hasGameStarted) {
+      if (password) {
+        return <GameOver />;
+      }
+
       if (!user?.isAdmin) {
         return <Notification notification="Waiting for host to start game" />;
       }

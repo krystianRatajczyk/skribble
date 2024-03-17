@@ -9,10 +9,12 @@ import {
   clearPoints,
   deleteRoom,
   getCurrentDrawer,
+  getMaxRounds,
   getMembers,
   getNewDrawer,
   getPassword,
   getRoundState,
+  getRounds,
   getTime,
   isRoomCreated,
   reduceTime,
@@ -21,6 +23,7 @@ import {
   setPassword,
   setPoints,
   setRoundState,
+  setRounds,
   setTime,
 } from "./data/rooms";
 import { DrawOptions, Message, User } from "./types/type";
@@ -169,7 +172,7 @@ io.on("connection", (socket) => {
   socket.on("start-game", ({ rounds, drawtime, roomId, currentDrawer }) => {
     setTime(roomId, drawtime);
     setMaxRounds(roomId, rounds);
-    socket.to(roomId).emit("started-game", rounds, drawtime, currentDrawer);
+    io.to(roomId).emit("started-game", rounds, drawtime, currentDrawer);
   });
 
   // start new round
@@ -223,7 +226,19 @@ io.on("connection", (socket) => {
     clearPoints(roomId);
 
     const newDrawer = getNewDrawer(roomId);
-    io.to(roomId).emit("restarted-round", newDrawer);
+    if (getRounds(roomId)! > getMaxRounds(roomId)!) {
+      io.to(roomId).emit("game-over");
+    } else {
+      io.to(roomId).emit("next-round", getRounds(roomId));
+      io.to(roomId).emit("restarted-round", newDrawer);
+    }
+  });
+
+  socket.on("restart-game", (roomId) => {
+    setTime(roomId, 0);
+    setRounds(roomId, 1);
+    clearPoints(roomId);
+    io.to(roomId).emit("restarted-game", getMembers(roomId));
   });
 });
 

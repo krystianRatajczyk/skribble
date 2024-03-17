@@ -1,13 +1,13 @@
 import { useMembers } from "@/hooks/use-member-store";
-import React from "react";
+import React, { useEffect } from "react";
 import LeaderboardItem from "./leaderboard-item";
 import { useUser } from "@/hooks/use-user-store";
 import { useGame } from "@/hooks/use-game-store";
 
 const LeaderBoard = () => {
   const { user } = useUser();
-  const { currentDrawer, hasGameStarted } = useGame();
-  const { members } = useMembers();
+  const { currentDrawer, hasGameStarted, password } = useGame();
+  const { members, setMembers } = useMembers();
 
   members.sort((a, b) => {
     return b.points - a.points;
@@ -30,10 +30,15 @@ const LeaderBoard = () => {
             return (
               <LeaderboardItem
                 key={member.id}
-                index={currentIndex}
+                place={currentIndex}
+                index={index}
                 member={member}
                 isOwner={member.id === user?.id}
-                isDrawer={member.id === currentDrawer?.id && hasGameStarted}
+                isDrawer={
+                  member.id === currentDrawer?.id &&
+                  hasGameStarted &&
+                  password !== ""
+                }
               />
             );
           })}

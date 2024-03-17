@@ -12,11 +12,7 @@ interface RoundOverProps {
 const RoundOver = ({ users }: RoundOverProps) => {
   const { roomId } = useParams();
   const { user } = useUser();
-  const {
-    password,
-    drawtime,
-    currentDrawer,
-  } = useGame();
+  const { password, drawtime, currentDrawer } = useGame();
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -35,7 +31,8 @@ const RoundOver = ({ users }: RoundOverProps) => {
     <div className="flex items-center justify-center bg-[#4e4e4e59] w-full h-full text-black">
       <div className="min-w-[400px] rounded-md px-5 py-3 flex flex-col items-center gap-3">
         <p className="text-center font-semibold text-[30px] ">
-          The word was <span className="font-bold">{password}</span>
+          The word was{" "}
+          <span className="font-bold">{password}</span>
         </p>
 
         <div className="w-full">
