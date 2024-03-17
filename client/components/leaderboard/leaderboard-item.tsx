@@ -24,7 +24,9 @@ const LeaderboardItem = ({
       className={`w-full flex items-center 
     justify-start px-3 py-1.5 gap-x-3 h-fit relative ${
       isWinner
-        ? "bg-emerald-300 dark:bg-emerald-800"
+        ? index % 2 == 1
+          ? "bg-emerald-300 dark:bg-emerald-800"
+          : "bg-emerald-400 dark:bg-emerald-900"
         : index % 2 == 1
         ? "bg-transparent"
         : "dark:bg-[#101022] bg-[#f7f7f7]"

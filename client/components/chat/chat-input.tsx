@@ -13,6 +13,7 @@ import { Message, User } from "@/types/type";
 import { useUser } from "@/hooks/use-user-store";
 import { useChat } from "@/hooks/use-chat-store";
 import { useGame } from "@/hooks/use-game-store";
+import { withoutPolishSigns } from "@/lib/utils";
 
 const formSchema = z.object({
   message: z.string().min(1),
@@ -35,8 +36,9 @@ const ChatInput = () => {
       message: values.message,
       author: { ...user! },
       isGuessed:
-        password?.trim().toLocaleLowerCase() ===
-          values.message.trim().toLocaleLowerCase() &&
+        (password?.trim().toLocaleLowerCase() ===
+          values.message.trim().toLocaleLowerCase() ||
+          withoutPolishSigns(password?.trim()!, values.message)) &&
         user?.id !== currentDrawer?.id,
       ownMessage: user?.id === currentDrawer?.id && password !== null,
     };

@@ -2,7 +2,7 @@ import { Server, type Socket } from "socket.io";
 import http from "http";
 import cors from "cors";
 import express from "express";
-import { joinRoomSchema } from "./lib/validate";
+import { joinRoomSchema, withoutPolishSigns } from "./lib/validate";
 import * as z from "zod";
 import {
   addUser,
@@ -136,12 +136,14 @@ io.on("connection", (socket) => {
           ...userMessage,
           isGuessed:
             userMessage.isGuessed &&
-            getPassword(roomId)?.trim().toLocaleLowerCase() ===
-              userMessage.message.trim().toLocaleLowerCase(),
+            (getPassword(roomId)?.trim().toLocaleLowerCase() ===
+              userMessage.message.trim().toLocaleLowerCase() ||
+              withoutPolishSigns(getPassword(roomId)!, userMessage.message)),
         });
         if (
           getPassword(roomId)?.toLocaleLowerCase() ===
-          userMessage.message.trim().toLocaleLowerCase()
+            userMessage.message.trim().toLocaleLowerCase() ||
+          withoutPolishSigns(getPassword(roomId)!, userMessage.message)
         ) {
           socket.to(roomId).emit("guessed-password", userMessage.author);
 

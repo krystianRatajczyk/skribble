@@ -138,6 +138,7 @@ const DrawingCanvas = () => {
 
     socket.on("game-over", () => {
       setGameState(false);
+      clearWinners();
     });
 
     return () => {
@@ -146,6 +147,7 @@ const DrawingCanvas = () => {
       socket.off("started-game");
       socket.off("ended-round");
       socket.off("restarted-round");
+      socket.off("game-over");
     };
   }, [socket, draw, canvasRef, hasGameStarted, password]);
 
