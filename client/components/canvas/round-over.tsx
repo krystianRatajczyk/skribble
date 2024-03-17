@@ -30,7 +30,7 @@ const RoundOver = ({ users }: RoundOverProps) => {
   }
 
   return (
-    <div className="flex items-center justify-center bg-[#4e4e4e59] dark:bg-[#35394a] w-full h-full text-white">
+    <div className="flex items-center justify-center bg-[#d3d3d359] dark:bg-[#35394a] w-full h-full text-[#3a3939]">
       <div className="min-w-[400px] rounded-md px-5 py-3 flex flex-col items-center gap-3">
         <p className="text-center font-semibold text-[30px] ">
           {language.wordWas} <span className="font-bold">{password}</span>

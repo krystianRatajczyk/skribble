@@ -22,7 +22,7 @@ const ChoosePassword = () => {
   };
 
   return (
-    <div className="flex gap-3 items-center justify-center bg-[#4e4e4e59] dark:bg-[#35394a] w-full h-full">
+    <div className="flex gap-3 items-center justify-center bg-[#d3d3d359] dark:bg-[#35394a] w-full h-full">
       {passwords?.map((password) => (
         <Button
           key={password}

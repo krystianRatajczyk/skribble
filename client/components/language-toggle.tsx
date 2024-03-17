@@ -19,7 +19,7 @@ const LanguageToggle = () => {
           <Languages className="h-[1.2rem] w-[1.2rem]" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-[6rem]">
+      <DropdownMenuContent align="end" className="min-w-[80px]">
         <DropdownMenuItem
           onClick={() => setLanguage("PL")}
           className="w-full flex items-center justify-between"
