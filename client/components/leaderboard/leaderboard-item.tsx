@@ -8,6 +8,7 @@ interface LeaderboardItemProps {
   place: number;
   isOwner: boolean;
   isDrawer: boolean;
+  isWinner: boolean;
 }
 
 const LeaderboardItem = ({
@@ -16,12 +17,17 @@ const LeaderboardItem = ({
   isOwner,
   isDrawer,
   place,
+  isWinner,
 }: LeaderboardItemProps) => {
   return (
     <div
       className={`w-full flex items-center 
     justify-start px-3 py-1.5 gap-x-3 h-fit relative ${
-      index % 2 == 1 ? "bg-transparent" : "dark:bg-[#101022] bg-[#f7f7f7]"
+      isWinner
+        ? "bg-emerald-300 dark:bg-emerald-800"
+        : index % 2 == 1
+        ? "bg-transparent"
+        : "dark:bg-[#101022] bg-[#f7f7f7]"
     }`}
     >
       <p className="flex flex-start flex-row -mt-4 font-semibold text-[15px]">
@@ -31,7 +37,7 @@ const LeaderboardItem = ({
       <div className="flex flex-col ">
         <span
           className={`${
-            isOwner ? "text-blue-500" : "dark:text-white "
+            isOwner ? "text-blue-400" : "dark:text-white "
           } font-semibold text-lg text-[15px]`}
         >
           {member.name} {isOwner && "(You)"}

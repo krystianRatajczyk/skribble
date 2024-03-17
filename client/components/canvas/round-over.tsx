@@ -28,11 +28,10 @@ const RoundOver = ({ users }: RoundOverProps) => {
   }
 
   return (
-    <div className="flex items-center justify-center bg-[#4e4e4e59] w-full h-full text-black">
+    <div className="flex items-center justify-center bg-[#4e4e4e59] dark:bg-[#35394a] w-full h-full text-white">
       <div className="min-w-[400px] rounded-md px-5 py-3 flex flex-col items-center gap-3">
         <p className="text-center font-semibold text-[30px] ">
-          The word was{" "}
-          <span className="font-bold">{password}</span>
+          The word was <span className="font-bold">{password}</span>
         </p>
 
         <div className="w-full">
@@ -41,7 +40,7 @@ const RoundOver = ({ users }: RoundOverProps) => {
               <span className="font-semibold text-[20px]">{user.name}</span>{" "}
               <span
                 className={`font-bold text-[19px] ${
-                  user.points > 0 ? "text-emerald-600" : "text-red-400"
+                  user.points > 0 ? "text-emerald-400" : "text-red-400"
                 }`}
               >
                 {user.points > 0 && "+"}

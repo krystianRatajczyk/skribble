@@ -9,7 +9,7 @@ const Color = ({ color }: { color: string }) => {
     <div
       className={cn(
         "w-6 h-6 rounded-sm",
-        strokeColor === color && "border-[1px] border-white"
+        strokeColor === color && "border-[1px] dark:border-white border-black"
       )}
       style={{ backgroundColor: color }}
       onClick={() => setStrokeColor(color)}

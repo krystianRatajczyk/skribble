@@ -7,8 +7,8 @@ interface NotificationProps {
 const Notification = ({ notification }: NotificationProps) => {
   return (
     <div
-      className="w-full h-full flex items-center justify-center bg-[#4e4e4e59] 
-  text-black text-[20px] font-semibold"
+      className="w-full h-full flex items-center justify-center bg-[#4e4e4e59] dark:bg-[#35394a] 
+  text-white text-[20px] font-semibold"
     >
       {notification}
     </div>

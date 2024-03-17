@@ -22,11 +22,11 @@ const ChoosePassword = () => {
   };
 
   return (
-    <div className="flex gap-3 items-center justify-center bg-[#4e4e4e59] w-full h-full">
+    <div className="flex gap-3 items-center justify-center bg-[#4e4e4e59] dark:bg-[#35394a] w-full h-full">
       {passwords?.map((password) => (
         <Button
           key={password}
-          className="bg-[#091125] text-white border-[2px] dark:border-[#1e293b] border-[#dde9f9] px-4 py-2 text-[19px] hover:bg-[#1f2535]"
+          className="bg-white dark:bg-[#091125] text-[#091125] dark:text-white border-[2px] dark:border-[#1e293b] border-[#dde9f9] px-4 py-2 text-[19px] hover:dark:bg-[#191e2c] hover:bg-[#dfdddd] "
           onClick={() => onClick(password)}
         >
           {password}

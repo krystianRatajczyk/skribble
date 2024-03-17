@@ -28,7 +28,7 @@ const Password = () => {
           <div className="flex items-center justify-center gap-1">
             {Array.from(password).map((char, index) => (
               <div
-                className={`w-4 h-[2px] ${char !== " " && "bg-white"}`}
+                className={`w-4 h-[2px] ${char !== " " && "dark:bg-white bg-[#091125]"}`}
                 key={index}
               />
             ))}

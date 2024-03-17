@@ -78,7 +78,7 @@ const GameSettings = () => {
   };
 
   return (
-    <div className="w-full h-full flex items-center justify-center bg-[#4e4e4e59] text-black">
+    <div className="w-full h-full flex items-center justify-center bg-[#4e4e4e59] dark:bg-[#35394a] text-black">
       <Dialog open={modalOpen} onOpenChange={() => setModalOpen(false)}>
         <DialogContent>
           <DialogHeader>
@@ -98,7 +98,7 @@ const GameSettings = () => {
           </DialogHeader>
         </DialogContent>
       </Dialog>
-      <Card className="w-[90vw] max-w-[400px] dark:bg-[#020817] border-[#1e293b]">
+      <Card className="w-[90vw] max-w-[400px] dark:bg-[#020817] dark:border-[#1e293b] border-[#b7b8b9]">
         <CardHeader>
           <CardTitle>Game settings</CardTitle>
           <CardDescription>

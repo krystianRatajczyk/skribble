@@ -23,7 +23,7 @@ const CopyButton = ({ roomId }: CopyButtonProps) => {
   };
 
   return (
-    <button onClick={copy} className="h-fit rounded-sm p-0 hover:bg-background">
+    <button onClick={copy} className="h-fit rounded-sm p-0 hover:bg-background ">
       {hasCopied ? (
         <Check className="w-3.5 h-3.5 dark:text-[#949b94] text-[#5b5c5b]" />
       ) : (
