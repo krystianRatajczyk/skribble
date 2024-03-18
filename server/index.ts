@@ -2,7 +2,7 @@ import { Server, type Socket } from "socket.io";
 import http from "http";
 import cors from "cors";
 import express from "express";
-import { joinRoomSchema, withoutPolishSigns } from "./lib/validate";
+import { joinRoomSchema, withoutPolishSigns } from "./src/lib/validate";
 import * as z from "zod";
 import {
   addUser,
@@ -25,8 +25,8 @@ import {
   setRoundState,
   setRounds,
   setTime,
-} from "./data/rooms";
-import { DrawOptions, Message, User } from "./types/type";
+} from "./src/data/rooms";
+import { DrawOptions, Message, User } from "./src/types/type";
 
 const app = express();
 
