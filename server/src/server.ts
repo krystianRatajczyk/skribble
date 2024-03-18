@@ -135,25 +135,28 @@ io.on("connection", (socket) => {
         socket.to(roomId).emit("receive-message", {
           ...userMessage,
           isGuessed:
+            getPassword(roomId) !== undefined &&
             userMessage.isGuessed &&
             (getPassword(roomId)?.trim().toLocaleLowerCase() ===
               userMessage.message.trim().toLocaleLowerCase() ||
               withoutPolishSigns(getPassword(roomId)!, userMessage.message)),
         });
-        if (
-          getPassword(roomId)?.toLocaleLowerCase() ===
-            userMessage.message.trim().toLocaleLowerCase() ||
-          withoutPolishSigns(getPassword(roomId)!, userMessage.message)
-        ) {
-          socket.to(roomId).emit("guessed-password", userMessage.author);
+        if (getPassword(roomId)) {
+          if (
+            getPassword(roomId)?.toLocaleLowerCase() ===
+              userMessage.message.trim().toLocaleLowerCase() ||
+            withoutPolishSigns(getPassword(roomId)!, userMessage.message)
+          ) {
+            socket.to(roomId).emit("guessed-password", userMessage.author);
 
-          const time = getTime(roomId);
-          if (time && drawtime) {
-            setPoints(
-              roomId,
-              userMessage.author,
-              Math.floor((time / drawtime) * 400)
-            );
+            const time = getTime(roomId);
+            if (time && drawtime) {
+              setPoints(
+                roomId,
+                userMessage.author,
+                Math.floor((time / drawtime) * 400)
+              );
+            }
           }
         }
       }

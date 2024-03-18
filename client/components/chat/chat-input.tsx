@@ -40,7 +40,8 @@ const ChatInput = () => {
       isGuessed:
         (password?.trim().toLocaleLowerCase() ===
           values.message.trim().toLocaleLowerCase() ||
-          withoutPolishSigns(password?.trim()!, values.message.trim())) &&
+          (password &&
+            withoutPolishSigns(password?.trim()!, values.message.trim()))) &&
         user?.id !== currentDrawer?.id,
       ownMessage: user?.id === currentDrawer?.id && password !== null,
     };
@@ -51,7 +52,7 @@ const ChatInput = () => {
       setMessages({
         ...userMessage,
         isWinner,
-        isGuessed: userMessage.isGuessed && !isWinner,
+        isGuessed: !!userMessage.isGuessed && !isWinner,
       });
 
       if (userMessage.isGuessed && !isWinner) {
