@@ -8,7 +8,7 @@
     "build": "rimraf build && tsc",
     "start": "npm run build && node build/index.js",
     "ts.check": "tsc --project tsconfig.json",
-    "add-build": "git add dist"
+    "add-build": "git add build"
   },
   "author": "Krystian",
   "license": "ISC",
