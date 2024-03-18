@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Drawing app with guessing in real-time",
   "main": "index.js",
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
     "dev": "nodemon",
     "build": "tsc --outDir build",
