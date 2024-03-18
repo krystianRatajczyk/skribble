@@ -38,7 +38,10 @@ const RoundOver = ({ users }: RoundOverProps) => {
 
         <div className="w-full">
           {users.map((user) => (
-            <div className="w-full flex items-center justify-between">
+            <div
+              className="w-full flex items-center justify-between"
+              key={user.id}
+            >
               <span className="font-semibold text-[20px]">{user.name}</span>{" "}
               <span
                 className={`font-bold text-[19px] ${

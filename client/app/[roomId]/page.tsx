@@ -34,7 +34,7 @@ const Room = ({ params }: RoomProps) => {
     if (!user || !members.find((member) => member.id === user.id)) {
       router.push("/");
     }
-  }, [user, members]);
+  }, [user, members, router]);
 
   useEffect(() => {
     socket.on("update-members", (members: User[]) => {

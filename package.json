@@ -4,7 +4,8 @@
   "description": "Drawing app with guessing in real-time",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm run dev\""
+    "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm run dev\"",
+    "build": "npm install && npm install --prefix client && npm run build --prefix client"
   },
   "author": "Krystian",
   "license": "ISC",
