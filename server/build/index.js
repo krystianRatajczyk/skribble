@@ -34,7 +34,11 @@ const validate_1 = require("./lib/validate");
 const z = __importStar(require("zod"));
 const rooms_1 = require("./data/rooms");
 const app = (0, express_1.default)();
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({
+    origin: ["https://skribble-tcxp.vercel.app"],
+    methods: ["GET", "POST"],
+    credentials: true,
+}));
 const server = http_1.default.createServer(app);
 const io = new socket_io_1.Server(server);
 const validateData = (socket, { name, roomId }) => {

@@ -7,7 +7,6 @@
     "dev": "nodemon",
     "build": "tsc --outDir build",
     "start": "npm run build && node build/index.js",
-    "ts.check": "tsc --project tsconfig.json",
     "add-build": "git add build"
   },
   "author": "Krystian",
@@ -29,7 +28,6 @@
     "typescript": "^5.3.3"
   },
   "pre-commit": [
-    "ts.check",
     "build",
     "add-build"
   ]
