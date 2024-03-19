@@ -2,11 +2,11 @@
   "name": "skribble-server",
   "version": "1.0.0",
   "description": "Drawing app with guessing in real-time",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "dev": "nodemon",
     "build": "rimraf build && tsc",
-    "start": "npm run build && node build/index.js",
+    "start": "nodemon src/index.ts",
     "ts.check": "tsc --project tsconfig.json",
     "add-build": "git add build"
   },
