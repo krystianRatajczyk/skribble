@@ -30,7 +30,13 @@ import { DrawOptions, Message, User } from "./types/type";
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://skribble-tcxp.vercel.app"],
+    methods: ["GET", "POST"],
+    credentials: true,
+  })
+);
 
 const server = http.createServer(app);
 
