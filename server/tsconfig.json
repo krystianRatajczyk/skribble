@@ -9,6 +9,8 @@
       "sourceMap": true,
       "strict": false,
       "outDir": "./build",
+      "noEmitOnError": false,
+      "strictNullChecks": false,
       "baseUrl": ".",
       "paths": {
           "*": ["node_modules/*", "src/types/*"]
