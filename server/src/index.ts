@@ -32,7 +32,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["https://skribble-tcxp.vercel.app"],
+    origin: ["https://skribble-server.vercel.app"],
     methods: ["GET", "POST"],
     credentials: true,
   })
