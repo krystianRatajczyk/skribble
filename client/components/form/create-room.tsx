@@ -51,7 +51,11 @@ const CreateRoom = ({ roomId }: CreateRoomProps) => {
     resolver: zodResolver(formSchema),
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = (
+    values: z.infer<typeof formSchema>,
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
+    e.preventDefault();
     setIsLoading(true);
     socket.emit("create-room", { ...values, roomId });
 
@@ -76,7 +80,7 @@ const CreateRoom = ({ roomId }: CreateRoomProps) => {
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={(e) => form.handleSubmit((data) => onSubmit(data, e))}
         className="flex flex-col gap-4"
       >
         <FormField
