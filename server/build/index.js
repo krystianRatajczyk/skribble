@@ -35,7 +35,7 @@ const z = __importStar(require("zod"));
 const rooms_1 = require("./data/rooms");
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    origin: ["https://skribble-tcxp.vercel.app"],
+    origin: ["https://skribble-server.vercel.app"],
     methods: ["GET", "POST"],
     credentials: true,
 }));
