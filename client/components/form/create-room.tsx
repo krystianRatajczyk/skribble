@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Form,
   FormControl,
@@ -51,14 +51,12 @@ const CreateRoom = ({ roomId }: CreateRoomProps) => {
     resolver: zodResolver(formSchema),
   });
 
-  const onSubmit = (
-    values: z.infer<typeof formSchema>,
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
-    e.preventDefault();
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     socket.emit("create-room", { ...values, roomId });
+  };
 
+  useEffect(() => {
     socket.on("wrong-data", ({ message }: { message: string }) => {
       toast.error(message, defaultStyle);
     });
@@ -75,12 +73,12 @@ const CreateRoom = ({ roomId }: CreateRoomProps) => {
         router.replace(`/${roomId}`);
       }
     );
-  };
+  }, []);
 
   return (
     <Form {...form}>
       <form
-        onSubmit={(e) => form.handleSubmit((data) => onSubmit(data, e))}
+        onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
         <FormField
