@@ -69,7 +69,7 @@ const CreateRoom = ({ roomId }: CreateRoomProps) => {
         setMembers(members);
         setUser({ ...user, isAdmin: true, points: 0 });
         setCurrentDrawer(currentDrawer);
-
+        console.log(user, members);
         router.replace(`/${roomId}`);
       }
     );
