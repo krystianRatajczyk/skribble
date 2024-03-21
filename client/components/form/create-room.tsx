@@ -53,7 +53,8 @@ const CreateRoom = ({ roomId }: CreateRoomProps) => {
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
-    socket.emit("create-room", { ...values, roomId });
+    // socket.emit("create-room", { ...values, roomId });
+    router.replace(`/${roomId}`)
   };
 
   useEffect(() => {
