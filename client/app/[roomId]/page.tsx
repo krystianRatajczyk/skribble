@@ -44,7 +44,7 @@ const Room = ({ params }: RoomProps) => {
     socket.on("send-notification", (message: string, type: string) => {
       if (type === "success") toast.success(message, defaultStyle);
       else if (type === "emoji")
-        toast(message, { icon: "😔", ...defaultStyle });
+        toast(message, { icon: "😕", ...defaultStyle });
     });
 
     socket.on("changed-password", (password) => {

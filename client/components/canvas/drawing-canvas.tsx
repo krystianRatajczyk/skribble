@@ -132,6 +132,7 @@ const DrawingCanvas = () => {
 
     socket.on("restarted-round", (newDrawer: User) => {
       setCurrentDrawer(newDrawer);
+      setPointMembers([]);
       setRoundState(true);
       setPassword(null);
       setTime(drawtime);
