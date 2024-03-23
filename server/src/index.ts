@@ -227,7 +227,7 @@ io.on("connection", (socket) => {
       }
       setRoundState(roomId, false);
       const members = getMembers(roomId);
-      socket.to(roomId).emit("ended-round", members);
+      io.to(roomId).emit("ended-round", members);
     }
   );
 

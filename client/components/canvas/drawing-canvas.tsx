@@ -174,7 +174,11 @@ const DrawingCanvas = () => {
 
       return (
         <Notification
-          notification={`${currentDrawer?.name} ${language.choosingTheWord}`}
+          notification={
+            currentDrawer?.name
+              ? `${currentDrawer?.name} ${language.choosingTheWord}`
+              : "Loading..."
+          }
         />
       );
     }
