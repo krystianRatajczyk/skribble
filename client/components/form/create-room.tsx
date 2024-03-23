@@ -69,10 +69,14 @@ const CreateRoom = ({ roomId }: CreateRoomProps) => {
         setMembers(members);
         setUser({ ...user, isAdmin: true, points: 0 });
         setCurrentDrawer(currentDrawer);
-        console.log(user, members);
         router.push(`/${roomId}`);
       }
     );
+
+    return () => {
+      socket.off("wrong-data")
+      socket.off("joined-room")
+    }
   }, []);
 
   return (

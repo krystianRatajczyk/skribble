@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { socket } from "@/lib/socket";
 import { useUser } from "@/hooks/use-user-store";
@@ -19,11 +19,30 @@ const LeaveButton = ({ roomId }: LeaveRoomProps) => {
   const leaveRoom = () => {
     setIsLeaving(true);
     socket.emit("leave-room", user, roomId);
+  };
+
+  useEffect(() => {
     socket.on("leaved-room", () => {
       router.replace("/");
       setIsLeaving(false);
     });
-  };
+
+    return () => {
+      socket.off("leaved-room");
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleWindowClose = () => {
+      socket.emit("leave-room", user, roomId);
+    };
+
+    window.addEventListener("beforeunload", handleWindowClose);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleWindowClose);
+    };
+  }, []);
 
   return (
     <Button
